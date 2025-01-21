@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   ft_substr.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: umut <umut@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: usogukpi <usogukpi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/12/10 20:17:12 by umut              #+#    #+#             */
-/*   Updated: 2024/12/10 20:17:13 by umut             ###   ########.fr       */
+/*   Created: 2024/10/24 20:52:23 by usogukpi          #+#    #+#             */
+/*   Updated: 2024/10/24 20:52:26 by usogukpi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-static char	*ft_zero_exception_handle(void)
+char static	*ft_zero_exception_handle(void)
 {
 	char	*arr;
 

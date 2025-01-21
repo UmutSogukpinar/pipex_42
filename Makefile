@@ -19,18 +19,19 @@ all : $(NAME)
 
 $(NAME) : $(SRCS)
 	$(MAKE) -C $(LIB_DIR)/libft
-	$(MAKE) -C $(LIB_DIR)/my_printf
-	$(CC) $(CFLAGS) $(SRCS) $(LIB_DIR)/libft/libft.a $(LIB_DIR)/my_printf/libftprintf.a -o $(NAME)
+	$(MAKE) -C $(LIB_DIR)/printf
+	$(CC) $(CFLAGS) $(SRCS) $(LIB_DIR)/libft/libft.a $(LIB_DIR)/printf/libftprintf.a -o $(NAME)
 
 clean: 
-	${MAKE} -C ${LIB_DIR}/libft fclean
-	${MAKE} -C ${LIB_DIR}/my_printf fclean
-	${RM} ${OBJS}
+	$(MAKE) -C $(LIB_DIR)/libft fclean
+	$(MAKE) -C $(LIB_DIR)/printf fclean
+	$(RM) $(OBJS)
 
 fclean: clean
-	${RM} ${NAME}
+	$(RM) $(NAME)
 
 re: fclean all
 
-run: ${NAME}
-	./${NAME} $(ARGS)
+run: $(NAME)
+	./$(NAME) $(ARGS)
+

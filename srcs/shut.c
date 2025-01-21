@@ -3,45 +3,63 @@
 /*                                                        :::      ::::::::   */
 /*   shut.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: umut <umut@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: usogukpi <usogukpi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/01/15 17:48:16 by umut              #+#    #+#             */
-/*   Updated: 2025/01/15 18:51:59 by umut             ###   ########.fr       */
+/*   Created: 2025/01/21 14:15:38 by usogukpi          #+#    #+#             */
+/*   Updated: 2025/01/21 17:34:12 by usogukpi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "../libs/printf/ft_printf.h"
 #include "pipex.h"
 #include "stdlib.h"
-#include "ft_printf.h"
 
 static void	free_double_pntr(char **array);
-static void	free_program(t_pipex *pipex);
+static void	free_operation(t_operation *opt);
+static void	free_pipex(t_pipex *pipex);
 
 void	shut_program_error(t_pipex *pipex, const char *message)
+{
+	if (message)
+		ft_printf("%s\n", message);
+    free_pipex(pipex);
+    exit(EXIT_FAILURE);
+}
+
+void	shut_program_default(t_pipex *pipex, const char *message)
 {
 	if (message)
 	{
 		ft_printf("%s\n", message);
 	}
-	free_program(pipex);
-	exit(EXIT_FAILURE);
+	free_pipex(pipex);
+    exit(EXIT_SUCCESS);
 }
-
-static void	free_program(t_pipex *pipex)
+static void	free_pipex(t_pipex *pipex)
 {
 	size_t	i;
 
 	if (pipex)
 	{
-		if (pipex -> cmd_args)
+		if (pipex->opt_list)
 		{
 			i = -1;
-			while ((pipex -> cmd_args)[++i])
-				free_double_pntr((pipex -> cmd_args)[++i]);
-			free(pipex -> cmd_args);
+			while ((pipex->opt_list)[++i])
+				free_operation((pipex->opt_list)[i]);
+            free(pipex->opt_list);
 		}
 		free(pipex);
 	}
+}
+
+static void	free_operation(t_operation *opt)
+{
+	if (opt)
+	{
+		free_double_pntr(opt->paths);
+		free_double_pntr(opt->cmd_args);
+	}
+    free(opt);
 }
 
 static void	free_double_pntr(char **array)

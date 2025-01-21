@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   ft_printf.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: umut <umut@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: usogukpi <usogukpi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/12/10 20:18:14 by umut              #+#    #+#             */
-/*   Updated: 2024/12/10 20:18:15 by umut             ###   ########.fr       */
+/*   Created: 2024/10/26 12:54:21 by usogukpi          #+#    #+#             */
+/*   Updated: 2024/10/27 12:42:27 by usogukpi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_helpers.h"
+#include "ft_printf.h"
 #include <unistd.h>
 
 int	ft_put_char(char c)

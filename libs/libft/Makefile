@@ -1,8 +1,6 @@
 NAME = libft.a
-CC = gcc
 CFLAGS = -Wall -Wextra -Werror
-AR = ar rcs
-RM = rm -f
+CC = cc
 FILES =	ft_atoi.c \
 		ft_memchr.c \
 		ft_split.c \
@@ -38,34 +36,34 @@ FILES =	ft_atoi.c \
 		ft_putstr_fd.c \
 		ft_strmapi.c
 
-BONUS = ft_lstadd_front.c \
-		ft_lstdelone.c \
-		ft_lstiter.c \
-		ft_lstlast.c \
-		ft_lstmap.c \
-		ft_lstnew.c \
-		ft_lstsize.c \
-		ft_lstclear.c \
-		ft_lstadd_back.c
+BONUS = ft_lstadd_front_bonus.c \
+		ft_lstdelone_bonus.c \
+		ft_lstiter_bonus.c \
+		ft_lstlast_bonus.c \
+		ft_lstmap_bonus.c \
+		ft_lstnew_bonus.c \
+		ft_lstsize_bonus.c \
+		ft_lstclear_bonus.c \
+		ft_lstadd_back_bonus.c
 
-OBJECTS = $(FILES:.c=.o)
+OBJ = $(FILES:.c=.o)
 BONUS_OBJ = $(BONUS:.c=.o)
+RM = rm -f
 
-all: ${NAME}
+all: $(NAME)
 
-$(NAME): $(OBJECTS)
-	$(AR) $(NAME) $(OBJECTS)
-
-bonus: $(OBJECTS) $(BONUS_OBJ)
-
-	$(AR) $(NAME) $(OBJECTS) $(BONUS_OBJ)
+$(NAME): $(OBJ)
+	ar rcs $(NAME) $(OBJ)
 
 clean:
-	${RM} ${OBJECTS} ${BONUS_OBJ}
+	$(RM) $(OBJ) $(BONUS_OBJ)
 
 fclean: clean
-	${RM} ${NAME}
+	$(RM) $(NAME)
 
 re: fclean all
 
-.PHONY: all bonus clean fclean re
+bonus: $(OBJ) $(BONUS_OBJ)
+	ar rcs $(NAME) $(OBJ) $(BONUS_OBJ)
+
+.PHONY: clean fclean all bonus re
