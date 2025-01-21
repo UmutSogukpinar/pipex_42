@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   shut.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: usogukpi <usogukpi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: umut <umut@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/21 14:15:38 by usogukpi          #+#    #+#             */
-/*   Updated: 2025/01/21 17:34:12 by usogukpi         ###   ########.fr       */
+/*   Updated: 2025/01/21 23:25:59 by umut             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,6 @@
 
 static void	free_double_pntr(char **array);
 static void	free_operation(t_operation *opt);
-static void	free_pipex(t_pipex *pipex);
 
 void	shut_program_error(t_pipex *pipex, const char *message)
 {
@@ -35,7 +34,7 @@ void	shut_program_default(t_pipex *pipex, const char *message)
 	free_pipex(pipex);
     exit(EXIT_SUCCESS);
 }
-static void	free_pipex(t_pipex *pipex)
+void	free_pipex(t_pipex *pipex)
 {
 	size_t	i;
 

@@ -1,32 +1,30 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   process.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: umut <umut@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/01/21 14:31:46 by usogukpi          #+#    #+#             */
-/*   Updated: 2025/01/21 22:20:01 by umut             ###   ########.fr       */
+/*   Created: 2025/01/21 22:05:35 by umut              #+#    #+#             */
+/*   Updated: 2025/01/21 22:58:40 by umut             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "sys/types.h"
-#include "unistd.h"
 #include "pipex.h"
+#include "unistd.h"
+#include "fcntl.h"
 
-int	main(int arg_num, char **args, char **envp)
+void child(t_pipex *pipex, char *infile, char **envp)
 {
-	t_pipex	*pipex;
-	pid_t	pid;
+	int fd_c;
 
-	if (arg_num != 5)
-		exit(EXIT_FAILURE);
-	pipex = init_pipex(arg_num - 3, args, envp);
-	pid = fork();
-	if (pid < 0)
+	if (pipe(((pipex->opt_list)[0])->fd) < 0)
 		shut_program_error(pipex, NULL);
-	else if (pid == 0)
-		child(pipex, args[1], envp);
-    shut_program_default(pipex, NULL);
-	return (0);
+	fd_c = open(infile, O_RDONLY);
+	if (fd_c < 0)
+		shut_program_error(pipex, NULL);
+	dup2(fd_c, STDIN_FILENO);
+	dup2((((pipex->opt_list)[0])->fd)[1], STDOUT_FILENO);
+	close((((pipex->opt_list)[0])->fd)[0]);
+	execute(pipex, (pipex->opt_list)[0], envp);
 }

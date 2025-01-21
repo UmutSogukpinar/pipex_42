@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipex.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: usogukpi <usogukpi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: umut <umut@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/21 13:05:19 by usogukpi          #+#    #+#             */
-/*   Updated: 2025/01/21 18:24:37 by usogukpi         ###   ########.fr       */
+/*   Updated: 2025/01/21 23:26:22 by umut             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,7 @@ typedef struct s_pipex
 t_pipex			*init_pipex(size_t size, char **args, char **envp);
 void			shut_program_error(t_pipex *pipex, const char *message);
 void			shut_program_default(t_pipex *pipex, const char *message);
+void			free_pipex(t_pipex *pipex);
 
 char			*find_path(t_pipex *pipex, t_operation *opt);
 void			execute(t_pipex *pipex, t_operation *opt, char **envp);
