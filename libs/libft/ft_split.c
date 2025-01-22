@@ -3,16 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   ft_split.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: usogukpi <usogukpi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: umut <umut@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/24 20:50:54 by usogukpi          #+#    #+#             */
-/*   Updated: 2024/10/24 20:50:56 by usogukpi         ###   ########.fr       */
+/*   Updated: 2025/01/22 21:16:54 by umut             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
-
-int static	ft_count_strings(char *str, char c)
+static int	ft_count_strings(char *str, char c)
 {
 	int	i;
 	int	count;
@@ -31,7 +30,7 @@ int static	ft_count_strings(char *str, char c)
 	return (count);
 }
 
-void	*ft_free_word(char **strings, int string_amount)
+static void	*ft_free_word(char **strings, int string_amount)
 {
 	int	i;
 
@@ -45,7 +44,7 @@ void	*ft_free_word(char **strings, int string_amount)
 	return (NULL);
 }
 
-char static	*ft_get_word(char *str, char sep, int i)
+static char	*ft_get_word(char *str, char sep, int i)
 {
 	char	*word;
 	int		start_index;

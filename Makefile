@@ -12,6 +12,8 @@ LIB_DIR = ./libs
 SRCS =	$(SOURCE_DIR)/main.c \
 		$(SOURCE_DIR)/init.c \
 		$(SOURCE_DIR)/shut.c \
+		$(SOURCE_DIR)/execution.c \
+		$(SOURCE_DIR)/process.c \
 
 OBJS = $(SRCS:.c=.o)
 

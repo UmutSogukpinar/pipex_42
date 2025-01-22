@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   ft_itoa.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: usogukpi <usogukpi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: umut <umut@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/24 20:13:44 by usogukpi          #+#    #+#             */
-/*   Updated: 2024/10/24 20:13:46 by usogukpi         ###   ########.fr       */
+/*   Updated: 2025/01/22 21:18:31 by umut             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-int static	ft_digit_len(int n)
+static int	ft_digit_len(int n)
 {
 	int	i;
 
@@ -29,7 +29,7 @@ int static	ft_digit_len(int n)
 	return (i);
 }
 
-char static	*ft_itoa_negatives(int n, int digit_len)
+static char	*ft_itoa_negatives(int n, int digit_len)
 {
 	char	*arr;
 
