@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   process.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: usogukpi <usogukpi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: umut <umut@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/23 13:31:46 by usogukpi          #+#    #+#             */
-/*   Updated: 2025/01/23 13:44:42 by usogukpi         ###   ########.fr       */
+/*   Updated: 2025/01/23 23:39:59 by umut             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ void	parent(t_pipex *pipex, char *outfile, char **envp)
 {
 	int	outfile_fd;
 
-	outfile_fd = open(outfile, O_CREAT | O_TRUNC | O_WRONLY, 0777);
+	outfile_fd = open(outfile, O_CREAT | O_TRUNC | O_WRONLY, 0644);
 	if (outfile_fd < 0)
 		shut_program_error(pipex, NULL);
 	if (dup2((((pipex->opt_list)[0])->fd)[0], STDIN_FILENO) < 0)
