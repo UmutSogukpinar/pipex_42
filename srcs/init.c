@@ -6,7 +6,7 @@
 /*   By: usogukpi <usogukpi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/21 13:06:00 by usogukpi          #+#    #+#             */
-/*   Updated: 2025/01/21 17:43:22 by usogukpi         ###   ########.fr       */
+/*   Updated: 2025/01/23 13:44:23 by usogukpi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,8 +20,8 @@ static char			*add_slash(t_pipex *pipex, char *old);
 
 t_pipex	*init_pipex(size_t size, char **args, char **envp)
 {
-	t_pipex		*pipex;
-	size_t		i;
+	t_pipex	*pipex;
+	size_t	i;
 
 	pipex = malloc(sizeof(t_pipex));
 	if (!pipex)

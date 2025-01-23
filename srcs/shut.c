@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   shut.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: umut <umut@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: usogukpi <usogukpi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/21 14:15:38 by usogukpi          #+#    #+#             */
-/*   Updated: 2025/01/21 23:25:59 by umut             ###   ########.fr       */
+/*   Updated: 2025/01/23 13:44:56 by usogukpi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,8 +21,8 @@ void	shut_program_error(t_pipex *pipex, const char *message)
 {
 	if (message)
 		ft_printf("%s\n", message);
-    free_pipex(pipex);
-    exit(EXIT_FAILURE);
+	free_pipex(pipex);
+	exit(EXIT_FAILURE);
 }
 
 void	shut_program_default(t_pipex *pipex, const char *message)
@@ -32,8 +32,9 @@ void	shut_program_default(t_pipex *pipex, const char *message)
 		ft_printf("%s\n", message);
 	}
 	free_pipex(pipex);
-    exit(EXIT_SUCCESS);
+	exit(EXIT_SUCCESS);
 }
+
 void	free_pipex(t_pipex *pipex)
 {
 	size_t	i;
@@ -45,7 +46,7 @@ void	free_pipex(t_pipex *pipex)
 			i = -1;
 			while ((pipex->opt_list)[++i])
 				free_operation((pipex->opt_list)[i]);
-            free(pipex->opt_list);
+			free(pipex->opt_list);
 		}
 		free(pipex);
 	}
@@ -58,7 +59,7 @@ static void	free_operation(t_operation *opt)
 		free_double_pntr(opt->paths);
 		free_double_pntr(opt->cmd_args);
 	}
-    free(opt);
+	free(opt);
 }
 
 static void	free_double_pntr(char **array)

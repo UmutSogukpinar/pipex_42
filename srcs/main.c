@@ -3,17 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: umut <umut@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: usogukpi <usogukpi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/01/21 14:31:46 by usogukpi          #+#    #+#             */
-/*   Updated: 2025/01/22 23:37:43 by umut             ###   ########.fr       */
+/*   Created: 2025/01/23 13:31:51 by usogukpi          #+#    #+#             */
+/*   Updated: 2025/01/23 13:44:38 by usogukpi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "sys/types.h"
-#include "unistd.h"
 #include "pipex.h"
 #include "process.h"
+#include "sys/types.h"
+#include "unistd.h"
 
 int	main(int arg_num, char **args, char **envp)
 {
@@ -31,6 +31,6 @@ int	main(int arg_num, char **args, char **envp)
 	else if (pid == 0)
 		child(pipex, args[1], envp);
 	parent(pipex, args[4], envp);
-    shut_program_default(pipex, NULL);
+	shut_program_default(pipex, NULL);
 	return (0);
 }

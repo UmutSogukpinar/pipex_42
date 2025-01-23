@@ -3,20 +3,20 @@
 /*                                                        :::      ::::::::   */
 /*   process.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: umut <umut@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: usogukpi <usogukpi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/01/21 22:05:35 by umut              #+#    #+#             */
-/*   Updated: 2025/01/22 23:26:50 by umut             ###   ########.fr       */
+/*   Created: 2025/01/23 13:31:46 by usogukpi          #+#    #+#             */
+/*   Updated: 2025/01/23 13:44:42 by usogukpi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "fcntl.h"
 #include "pipex.h"
 #include "unistd.h"
-#include "fcntl.h"
 
 void	child(t_pipex *pipex, char *infile, char **envp)
 {
-	int infile_fd;
+	int	infile_fd;
 
 	infile_fd = open(infile, O_RDONLY);
 	if (infile_fd < 0)
