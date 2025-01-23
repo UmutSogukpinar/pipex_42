@@ -6,7 +6,7 @@
 /*   By: umut <umut@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/23 19:10:24 by umut              #+#    #+#             */
-/*   Updated: 2025/01/23 23:37:03 by umut             ###   ########.fr       */
+/*   Updated: 2025/01/24 00:59:00 by umut             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,18 +19,22 @@ static void	child_rec(t_pipex *pipex, char *infile, char **envp, size_t last);
 static void	parent(t_pipex *pipex, char *outfile, char **envp, size_t opt);
 static void	first_child(t_pipex *pipex, char *infile, char **envp);
 
-void	process(t_pipex *pipex, char **args, char **envp, size_t last)
+void	process(t_pipex *pipex, char **args, char **envp, t_data *data)
 {
 	pid_t	pid;
 	int		arg_num;
+	int		last_child_index;
 
-	arg_num = last + 5;
+	arg_num = data -> arg_num;
+	last_child_index = data -> lst_child_index;
+	if (data)
+		free(data);
 	pid = fork();
 	if (pid < 0)
 		shut_program_error(pipex, NULL);
 	else if (pid == 0)
-		child_rec(pipex, args[1], envp, last);
-	parent(pipex, args[arg_num - 1], envp, last);
+		child_rec(pipex, args[1], envp, last_child_index);
+	parent(pipex, args[arg_num - 1], envp, last_child_index);
 }
 
 static void	child_rec(t_pipex *pipex, char *infile, char **envp, size_t index)
