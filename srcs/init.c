@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: usogukpi <usogukpi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: umut <umut@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/21 13:06:00 by usogukpi          #+#    #+#             */
-/*   Updated: 2025/01/23 13:44:23 by usogukpi         ###   ########.fr       */
+/*   Updated: 2025/01/24 13:04:42 by umut             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,10 @@ t_pipex	*init_pipex(size_t size, char **args, char **envp)
 	while (++i < size)
 		(pipex->opt_list)[i] = init_opt(pipex, args[i + 2], envp);
 	(pipex->opt_list)[i] = NULL;
+	pipex->infile = ft_strdup(args[1]);
+	pipex->outfile = ft_strdup(args[size + 2]);
+	if (!(pipex->infile) || !(pipex->outfile))
+		shut_program_error(pipex, NULL);
 	return (pipex);
 }
 

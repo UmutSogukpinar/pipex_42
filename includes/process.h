@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   process.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: usogukpi <usogukpi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: umut <umut@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/23 13:32:18 by usogukpi          #+#    #+#             */
-/*   Updated: 2025/01/23 13:32:21 by usogukpi         ###   ########.fr       */
+/*   Updated: 2025/01/24 13:06:22 by umut             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 
 # include "pipex.h"
 
-void	child(t_pipex *pipex, char *infile, char **envp);
-void	parent(t_pipex *pipex, char *outfile, char **envp);
+void	child(t_pipex *pipex, char **envp);
+void	parent(t_pipex *pipex, char **envp);
 
 #endif

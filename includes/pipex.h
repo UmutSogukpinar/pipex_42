@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipex.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: usogukpi <usogukpi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: umut <umut@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/21 13:05:19 by usogukpi          #+#    #+#             */
-/*   Updated: 2025/01/23 13:32:13 by usogukpi         ###   ########.fr       */
+/*   Updated: 2025/01/24 13:02:21 by umut             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,8 @@ typedef struct s_pipex
 {
 	t_operation	**opt_list;
 	size_t		list_size;
+	char		*infile;
+	char		*outfile;
 
 }				t_pipex;
 

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: usogukpi <usogukpi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: umut <umut@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/23 13:31:51 by usogukpi          #+#    #+#             */
-/*   Updated: 2025/01/23 13:44:38 by usogukpi         ###   ########.fr       */
+/*   Updated: 2025/01/24 13:06:47 by umut             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,8 +29,8 @@ int	main(int arg_num, char **args, char **envp)
 	if (pid < 0)
 		shut_program_error(pipex, NULL);
 	else if (pid == 0)
-		child(pipex, args[1], envp);
-	parent(pipex, args[4], envp);
+		child(pipex, envp);
+	parent(pipex, envp);
 	shut_program_default(pipex, NULL);
 	return (0);
 }

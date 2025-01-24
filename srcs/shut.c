@@ -6,7 +6,7 @@
 /*   By: umut <umut@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/21 14:15:38 by usogukpi          #+#    #+#             */
-/*   Updated: 2025/01/24 00:54:45 by umut             ###   ########.fr       */
+/*   Updated: 2025/01/24 13:05:15 by umut             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,10 @@ void	free_pipex(t_pipex *pipex)
 				free_operation((pipex->opt_list)[i]);
 			free(pipex->opt_list);
 		}
+		if (pipex->infile)
+			free(pipex->infile);
+		if (pipex->outfile)
+			free(pipex->outfile);
 		free(pipex);
 	}
 }
