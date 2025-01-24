@@ -6,7 +6,7 @@
 /*   By: umut <umut@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/23 13:49:21 by usogukpi          #+#    #+#             */
-/*   Updated: 2025/01/24 00:57:53 by umut             ###   ########.fr       */
+/*   Updated: 2025/01/24 13:14:35 by umut             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ int	main(int arg_num, char **args, char **envp)
 	pipex = init_pipex(opt_amount, args, envp);
 	data = init_data(pipex, arg_num);
 	init_pipes(pipex, pipe_amount);
-	process(pipex, args, envp, last_child_index);
+	process(pipex, envp, last_child_index);
 	if (data)
 		free(data);
 	shut_program_default(pipex, NULL);

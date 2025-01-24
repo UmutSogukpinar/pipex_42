@@ -6,7 +6,7 @@
 /*   By: umut <umut@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/21 13:06:00 by usogukpi          #+#    #+#             */
-/*   Updated: 2025/01/24 13:04:42 by umut             ###   ########.fr       */
+/*   Updated: 2025/01/24 13:09:22 by umut             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,7 +85,7 @@ static void	init_paths(t_pipex *pipex, t_operation *opt, char **envp)
 	shut_program_error(pipex, NULL);
 }
 
-char	*add_slash(t_pipex *pipex, char *old)
+static char	*add_slash(t_pipex *pipex, char *old)
 {
 	size_t	total_size;
 	char	*new;

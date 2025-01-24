@@ -6,7 +6,7 @@
 /*   By: umut <umut@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/24 00:41:48 by umut              #+#    #+#             */
-/*   Updated: 2025/01/24 00:56:26 by umut             ###   ########.fr       */
+/*   Updated: 2025/01/24 12:57:26 by umut             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,4 +31,21 @@ t_data *init_data(t_pipex *pipex, int arg_num)
 	data -> opt_amount = opt_amount;
 	data -> arg_num = arg_num;
 	return (data);
+}
+
+void init_pipes(t_pipex *pipex, size_t amount) {
+    size_t i;
+
+    i = 0;
+    while (i < amount) {
+        if (pipe(((pipex->opt_list)[i])->fd) < 0) {
+            while (i > 0) {
+                close(((pipex->opt_list)[i - 1])->fd[0]);
+                close(((pipex->opt_list)[i - 1])->fd[1]);
+                i--;
+            }
+            shut_program_error(pipex, NULL);
+        }
+        i++;
+    }
 }
