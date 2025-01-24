@@ -6,12 +6,13 @@
 /*   By: umut <umut@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/24 00:41:48 by umut              #+#    #+#             */
-/*   Updated: 2025/01/24 12:57:26 by umut             ###   ########.fr       */
+/*   Updated: 2025/01/24 13:23:40 by umut             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "bonus.h"
 #include "pipex.h"
+#include "unistd.h"
 
 t_data *init_data(t_pipex *pipex, int arg_num)
 {

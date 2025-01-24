@@ -21,6 +21,7 @@ SRCS =	$(SOURCE_DIR)/main.c \
 BONUS_SRCS =	$(BONUS_DIR)/main_bonus.c \
 				$(BONUS_DIR)/process_bonus.c \
 				$(BONUS_DIR)/utils_bonus.c \
+				$(BONUS_DIR)/init_bonus.c \
 				$(COMMON_SRCS)
 
 

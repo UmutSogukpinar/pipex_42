@@ -6,21 +6,19 @@
 /*   By: umut <umut@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/23 20:19:40 by umut              #+#    #+#             */
-/*   Updated: 2025/01/24 12:57:40 by umut             ###   ########.fr       */
+/*   Updated: 2025/01/24 13:31:19 by umut             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fcntl.h"
 #include "pipex.h"
+#include "bonus.h"
 #include "unistd.h"
-#include "stdio.h"
 
 int	open_file(t_pipex *pipex, char *name, int is_child)
 {
 	int	fd;
 
-
-	printf("is child: %d and name is: %s\n", is_child, name);
 	if (is_child)
 		fd = open(name, O_RDONLY);
 	else
@@ -43,4 +41,10 @@ void close_unused_pipes_one(t_pipex *pipex, size_t amount)
         }
         i++;
     }
+}
+
+void    free_data(t_data *data)
+{
+    if (data)
+        free(data);
 }
