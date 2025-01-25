@@ -3,11 +3,13 @@ BONUS_NAME = pipex_bonus
 
 CC = gcc
 CFLAGS = -Wall -Wextra -Werror -Iincludes -Ilibs/libft -Ilibs/my_printf
+B_CFLAGS = -Wall -Wextra -Werror -Iincludes -Ilibs/libft -Ilibs/my_printf -Ibonus/get_next_line
 
 RM = rm -rf
 
-BONUS_DIR = ./bonus
 SOURCE_DIR = ./srcs
+BONUS_DIR = ./bonus
+GNL_DIR = ./bonus/get_next_line
 LIB_DIR = ./libs
 
 COMMON_SRCS =	$(SOURCE_DIR)/init.c \
@@ -22,6 +24,8 @@ BONUS_SRCS =	$(BONUS_DIR)/main_bonus.c \
 				$(BONUS_DIR)/process_bonus.c \
 				$(BONUS_DIR)/utils_bonus.c \
 				$(BONUS_DIR)/init_bonus.c \
+				$(GNL_DIR)/ get_next_line.c \
+				$(GNL_DIR)/get_next_line_utils.c \
 				$(COMMON_SRCS)
 
 
@@ -40,7 +44,7 @@ $(NAME): $(OBJS)
 $(BONUS_NAME): $(BONUS_OBJS)
 	$(MAKE) -C $(LIB_DIR)/libft
 	$(MAKE) -C $(LIB_DIR)/printf
-	$(CC) $(CFLAGS) $(BONUS_SRCS) $(LIBFT) $(PRINTF) -o $(NAME)
+	$(CC) $(B_CFLAGS) $(BONUS_SRCS) $(LIBFT) $(PRINTF) -o $(NAME)
 
 clean:
 	$(MAKE) -C $(LIB_DIR)/libft fclean

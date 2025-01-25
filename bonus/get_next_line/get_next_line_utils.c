@@ -1,21 +1,39 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   process.h                                          :+:      :+:    :+:   */
+/*   get_next_line_utils.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: usogukpi <usogukpi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/01/23 13:32:18 by usogukpi          #+#    #+#             */
-/*   Updated: 2025/01/25 14:49:22 by usogukpi         ###   ########.fr       */
+/*   Created: 2024/11/02 15:51:35 by usogukpi          #+#    #+#             */
+/*   Updated: 2025/01/25 16:06:48 by usogukpi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef PROCESS_H
-# define PROCESS_H
+#include "get_next_line.h"
 
-# include "pipex.h"
+int	ft_is_newline_char(const char *s)
+{
+	int	i;
 
-void	child(t_pipex *pipex, char **envp);
-void	parent(t_pipex *pipex, char **envp);
+	if (!s)
+		return (0);
+	i = 0;
+	while (s[i] != '\0')
+	{
+		if (s[i] == '\n')
+			return (1);
+		i++;
+	}
+	return (0);
+}
 
-#endif
+char	*ft_update_repo(char *total_line, char *repo)
+{
+	size_t	repo_len;
+	size_t	line_len;
+
+	repo_len = ft_strlen(repo);
+	line_len = ft_strlen(total_line);
+	return (ft_substr(repo, line_len, repo_len - line_len));
+}
