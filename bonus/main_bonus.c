@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main_bonus.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: usogukpi <usogukpi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: umut <umut@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/23 13:49:21 by usogukpi          #+#    #+#             */
-/*   Updated: 2025/01/25 15:44:32 by usogukpi         ###   ########.fr       */
+/*   Updated: 2025/01/26 23:47:11 by umut             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,6 @@ static void	normal_path(int arg_num, char **args, char **envp)
 
 static void	here_doc_path(int arg_num, char **args, char **envp)
 {
-	t_pipex	*pipex;
 	int		fd[2];
 	pid_t	pid;
 	
