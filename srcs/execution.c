@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execution.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: usogukpi <usogukpi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: umut <umut@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/21 15:52:27 by usogukpi          #+#    #+#             */
-/*   Updated: 2025/01/23 13:44:11 by usogukpi         ###   ########.fr       */
+/*   Updated: 2025/01/26 23:42:27 by umut             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,12 +22,14 @@ void	execute(t_pipex *pipex, t_operation *opt, char **envp)
 	char	**argv;
 
 	path = find_path(pipex, opt);
+	if (!path)
+		shut_program_error(pipex, CMD_NOT_FOUND);
 	argv = opt->cmd_args;
 	if (execve(path, argv, envp) == -1)
 	{
-		ft_putstr_fd("command not found: ", 2);
-		ft_putendl_fd((opt->cmd_args)[0], 2);
-		shut_program_default(pipex, NULL);
+		close(1);
+		close(0);
+		shut_program_error(pipex, CMD_NOT_FOUND);
 	}
 }
 

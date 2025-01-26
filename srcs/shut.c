@@ -3,34 +3,33 @@
 /*                                                        :::      ::::::::   */
 /*   shut.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: usogukpi <usogukpi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: umut <umut@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/21 14:15:38 by usogukpi          #+#    #+#             */
-/*   Updated: 2025/01/25 14:48:52 by usogukpi         ###   ########.fr       */
+/*   Updated: 2025/01/26 23:35:56 by umut             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../libs/printf/ft_printf.h"
 #include "pipex.h"
-#include "stdlib.h"
+#include "libft.h"
+#include "unistd.h"
 
 static void	free_double_pntr(char **array);
 static void	free_operation(t_operation *opt);
 
-void	shut_program_error(t_pipex *pipex, const char *message)
+void	shut_program_error(t_pipex *pipex, char *message)
 {
+	unlink(pipex->outfile);
 	if (message)
-		ft_printf("%s\n", message);
+		ft_putendl_fd(message, 2);
 	free_pipex(pipex);
 	exit(EXIT_FAILURE);
 }
 
-void	shut_program_default(t_pipex *pipex, const char *message)
+void	shut_program_default(t_pipex *pipex, char *message)
 {
 	if (message)
-	{
-		ft_printf("%s\n", message);
-	}
+		ft_putendl_fd(message, 1);
 	free_pipex(pipex);
 	exit(EXIT_SUCCESS);
 }
