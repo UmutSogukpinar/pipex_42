@@ -6,7 +6,7 @@
 /*   By: usogukpi <usogukpi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/25 14:03:41 by usogukpi          #+#    #+#             */
-/*   Updated: 2025/01/25 15:49:56 by usogukpi         ###   ########.fr       */
+/*   Updated: 2025/01/27 14:46:39 by usogukpi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ void	close_unused_pipes_one(t_pipex *pipex, size_t amount)
 	}
 }
 
-void	free_data(t_data *data)
+void	free_data(void *data)
 {
 	if (data)
 		free(data);
@@ -56,5 +56,5 @@ int	is_strs_equals(char *s1, char *s2)
 	if (!s1 || !s2)
 		return (0);
 	return (ft_strlen(s1) == ft_strlen(s2) && ft_strncmp(s1, s2,
-			ft_strlen(s2)));
+			ft_strlen(s2)) == 0);
 }

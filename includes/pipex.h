@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipex.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: umut <umut@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: usogukpi <usogukpi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/21 13:05:19 by usogukpi          #+#    #+#             */
-/*   Updated: 2025/01/26 23:14:41 by umut             ###   ########.fr       */
+/*   Updated: 2025/01/27 14:22:41 by usogukpi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,9 +23,19 @@ typedef struct s_operation
 
 }				t_operation;
 
+typedef struct s_data
+{
+	int			pipe_amount;
+	int			lst_child_index;
+	int			opt_amount;
+	int			arg_num;
+
+}				t_data;
+
 typedef struct s_pipex
 {
 	t_operation	**opt_list;
+	t_data		*data;
 	size_t		list_size;
 	char		*infile;
 	char		*outfile;
@@ -33,6 +43,7 @@ typedef struct s_pipex
 }				t_pipex;
 
 t_pipex			*init_pipex(size_t size, char **args, char **envp);
+t_operation		*init_opt(t_pipex *pipex, char *args, char **envp);
 void			shut_program_error(t_pipex *pipex, char *message);
 void			shut_program_default(t_pipex *pipex, char *message);
 void			free_pipex(t_pipex *pipex);

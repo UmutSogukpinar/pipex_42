@@ -6,11 +6,13 @@
 /*   By: usogukpi <usogukpi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/25 14:04:05 by usogukpi          #+#    #+#             */
-/*   Updated: 2025/01/25 14:52:04 by usogukpi         ###   ########.fr       */
+/*   Updated: 2025/01/27 19:51:08 by usogukpi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "bonus.h"
+#include "fcntl.h"
+#include "get_next_line.h"
 #include "pipex.h"
 #include "unistd.h"
 
@@ -53,4 +55,21 @@ void	init_pipes(t_pipex *pipex, size_t amount)
 		}
 		i++;
 	}
+}
+
+void	finish_gnl(t_pipex *pipex)
+{
+	int		inter_fd;
+	char	*bait;
+
+	inter_fd = open("dup.txt", O_CREAT | O_TRUNC);
+	if (inter_fd < 0)
+		shut_program_error(pipex, NULL);
+	bait = get_next_line(inter_fd);
+	while (bait)
+	{
+		free(bait);
+		bait = get_next_line(inter_fd);
+	}
+	unlink("dup.txt");
 }

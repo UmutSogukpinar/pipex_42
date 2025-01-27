@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   shut.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: umut <umut@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: usogukpi <usogukpi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/21 14:15:38 by usogukpi          #+#    #+#             */
-/*   Updated: 2025/01/26 23:35:56 by umut             ###   ########.fr       */
+/*   Updated: 2025/01/27 11:13:55 by usogukpi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,8 @@ void	free_pipex(t_pipex *pipex)
 			free(pipex->infile);
 		if (pipex->outfile)
 			free(pipex->outfile);
+		if (pipex->data)
+			free(pipex->data);
 		free(pipex);
 	}
 }

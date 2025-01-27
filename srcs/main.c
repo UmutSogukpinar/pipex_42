@@ -6,7 +6,7 @@
 /*   By: usogukpi <usogukpi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/23 13:31:51 by usogukpi          #+#    #+#             */
-/*   Updated: 2025/01/25 14:48:32 by usogukpi         ###   ########.fr       */
+/*   Updated: 2025/01/27 11:13:24 by usogukpi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@ int	main(int arg_num, char **args, char **envp)
 	if (arg_num != 5)
 		exit(EXIT_FAILURE);
 	pipex = init_pipex(arg_num - 3, args, envp);
+	pipex->data = NULL;
 	if (pipe(((pipex->opt_list)[0])->fd) < 0)
 		shut_program_error(pipex, NULL);
 	pid = fork();

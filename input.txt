@@ -1,0 +1,5 @@
+apple
+man
+mall
+example
+small

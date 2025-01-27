@@ -3,17 +3,18 @@
 /*                                                        :::      ::::::::   */
 /*   main_bonus.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: umut <umut@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: usogukpi <usogukpi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/23 13:49:21 by usogukpi          #+#    #+#             */
-/*   Updated: 2025/01/26 23:47:11 by umut             ###   ########.fr       */
+/*   Updated: 2025/01/27 17:20:59 by usogukpi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "bonus.h"
 #include "pipex.h"
-#include "unistd.h"
+#include "stdio.h"
 #include "sys/types.h"
+#include "unistd.h"
 
 static void	normal_path(int arg_num, char **args, char **envp);
 static void	here_doc_path(int arg_num, char **args, char **envp);
@@ -40,27 +41,38 @@ static void	normal_path(int arg_num, char **args, char **envp)
 	pipe_amount = opt_amount - 1;
 	pipex = init_pipex(opt_amount, args, envp);
 	data = init_data(pipex, arg_num);
+	pipex->data = data;
 	init_pipes(pipex, pipe_amount);
 	process(pipex, envp, data);
-	if (data)
-		free(data);
 	shut_program_default(pipex, NULL);
 }
 
 static void	here_doc_path(int arg_num, char **args, char **envp)
 {
-	int		fd[2];
+	t_pipex	*pipex;
 	pid_t	pid;
-	
+	pid_t	pid2;
+
 	if (arg_num != 6)
 		exit(EXIT_SUCCESS);
-	if (pipe(fd) < 0)
-		exit(EXIT_FAILURE);
+	pipex = init_here_doc_pipex(arg_num - 4, args, envp);
+	pipex->infile = NULL;
+	if (pipe(((pipex->opt_list)[0])->fd) < 0
+		|| pipe(((pipex->opt_list)[1])->fd) < 0)
+		shut_program_error(pipex, NULL);
 	pid = fork();
-	if (pid == -1)
-		exit(EXIT_FAILURE);
+	if (pid < 0)
+		shut_program_error(pipex, NULL);
 	else if (pid == 0)
-		here_doc_input(args, fd);
+		here_doc_one(pipex, args);
 	else
-		here_doc_output(args, fd, envp);
+	{
+		pid2 = fork();
+		if (pid2 < 0)
+			shut_program_error(pipex, NULL);
+		else if (pid2 == 0)
+			here_doc_two(pipex, envp);
+		else
+			here_doc_three(pipex, envp);
+	}
 }

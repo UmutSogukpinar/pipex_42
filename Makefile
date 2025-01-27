@@ -24,7 +24,8 @@ BONUS_SRCS =	$(BONUS_DIR)/main_bonus.c \
 				$(BONUS_DIR)/process_bonus.c \
 				$(BONUS_DIR)/utils_bonus.c \
 				$(BONUS_DIR)/init_bonus.c \
-				$(GNL_DIR)/ get_next_line.c \
+				$(BONUS_DIR)/here_doc.c \
+				$(GNL_DIR)/get_next_line.c \
 				$(GNL_DIR)/get_next_line_utils.c \
 				$(COMMON_SRCS)
 
