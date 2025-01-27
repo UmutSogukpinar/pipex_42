@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   here_doc.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: usogukpi <usogukpi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: umut <umut@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/25 13:55:17 by usogukpi          #+#    #+#             */
-/*   Updated: 2025/01/27 19:47:04 by usogukpi         ###   ########.fr       */
+/*   Updated: 2025/01/28 00:24:14 by umut             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,6 +92,7 @@ t_pipex	*init_here_doc_pipex(size_t size, char **args, char **envp)
 	}
 	(pipex->opt_list)[i] = NULL;
 	pipex->infile = NULL;
+	pipex->data = NULL;
 	pipex->outfile = ft_strdup(args[size + 3]);
 	if (!(pipex->outfile))
 		shut_program_error(pipex, NULL);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main_bonus.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: usogukpi <usogukpi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: umut <umut@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/23 13:49:21 by usogukpi          #+#    #+#             */
-/*   Updated: 2025/01/27 17:20:59 by usogukpi         ###   ########.fr       */
+/*   Updated: 2025/01/28 00:23:50 by umut             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,6 @@ static void	here_doc_path(int arg_num, char **args, char **envp)
 	if (arg_num != 6)
 		exit(EXIT_SUCCESS);
 	pipex = init_here_doc_pipex(arg_num - 4, args, envp);
-	pipex->infile = NULL;
 	if (pipe(((pipex->opt_list)[0])->fd) < 0
 		|| pipe(((pipex->opt_list)[1])->fd) < 0)
 		shut_program_error(pipex, NULL);
