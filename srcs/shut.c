@@ -6,13 +6,14 @@
 /*   By: usogukpi <usogukpi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/21 14:15:38 by usogukpi          #+#    #+#             */
-/*   Updated: 2025/01/27 11:13:55 by usogukpi         ###   ########.fr       */
+/*   Updated: 2025/01/28 16:21:56 by usogukpi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
 #include "libft.h"
 #include "unistd.h"
+#include "stdio.h"
 
 static void	free_double_pntr(char **array);
 static void	free_operation(t_operation *opt);
@@ -21,7 +22,9 @@ void	shut_program_error(t_pipex *pipex, char *message)
 {
 	unlink(pipex->outfile);
 	if (message)
-		ft_putendl_fd(message, 2);
+		perror(message);
+	else
+		perror("Pipex stops working");
 	free_pipex(pipex);
 	exit(EXIT_FAILURE);
 }

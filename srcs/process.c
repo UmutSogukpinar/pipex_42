@@ -6,7 +6,7 @@
 /*   By: usogukpi <usogukpi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/23 13:31:46 by usogukpi          #+#    #+#             */
-/*   Updated: 2025/01/27 11:51:38 by usogukpi         ###   ########.fr       */
+/*   Updated: 2025/01/28 14:46:26 by usogukpi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,11 +20,11 @@ void	child(t_pipex *pipex, char **envp)
 
 	infile_fd = open(pipex->infile, O_RDONLY);
 	if (infile_fd < 0)
-		shut_program_error(pipex, NULL);
+		shut_program_error(pipex, INFILE_ERR);
 	if (dup2(infile_fd, STDIN_FILENO) < 0)
-		shut_program_error(pipex, NULL);
+		shut_program_error(pipex, DUP2_ERR);
 	if (dup2((((pipex->opt_list)[0])->fd)[1], STDOUT_FILENO) < 0)
-		shut_program_error(pipex, NULL);
+		shut_program_error(pipex, DUP2_ERR);
 	close((((pipex->opt_list)[0])->fd)[0]);
 	close((((pipex->opt_list)[0])->fd)[1]);
 	close(infile_fd);
@@ -37,11 +37,11 @@ void	parent(t_pipex *pipex, char **envp)
 
 	outfile_fd = open(pipex->outfile, O_CREAT | O_TRUNC | O_WRONLY, 0644);
 	if (outfile_fd < 0)
-		shut_program_error(pipex, NULL);
+		shut_program_error(pipex, OUTFILE_ERR);
 	if (dup2((((pipex->opt_list)[0])->fd)[0], STDIN_FILENO) < 0)
-		shut_program_error(pipex, NULL);
+		shut_program_error(pipex, DUP2_ERR);
 	if (dup2(outfile_fd, STDOUT_FILENO) < 0)
-		shut_program_error(pipex, NULL);
+		shut_program_error(pipex, DUP2_ERR);
 	close((((pipex->opt_list)[0])->fd)[1]);
 	close((((pipex->opt_list)[0])->fd)[0]);
 	close(outfile_fd);

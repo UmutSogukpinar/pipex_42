@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   here_doc.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: umut <umut@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: usogukpi <usogukpi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/25 13:55:17 by usogukpi          #+#    #+#             */
-/*   Updated: 2025/01/28 00:24:14 by umut             ###   ########.fr       */
+/*   Updated: 2025/01/28 16:07:39 by usogukpi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,6 @@
 #include "get_next_line.h"
 #include "libft.h"
 #include "pipex.h"
-#include "stdio.h"
 #include "unistd.h"
 
 static char	*update_w_newline(char *str);
@@ -65,9 +64,9 @@ void	here_doc_three(t_pipex *pipex, char **envp)
 
 	outfile_fd = open(pipex->outfile, O_CREAT | O_APPEND | O_RDWR, 0644);
 	if (dup2((pipex->opt_list[1])->fd[0], STDIN_FILENO) < 0)
-		shut_program_error(pipex, NULL);
+		shut_program_error(pipex, DUP2_ERR);
 	if (dup2(outfile_fd, STDOUT_FILENO) < 0)
-		shut_program_error(pipex, NULL);
+		shut_program_error(pipex, DUP2_ERR);
 	close_unused_pipes_one(pipex, 2);
 	execute(pipex, (pipex->opt_list)[1], envp);
 }

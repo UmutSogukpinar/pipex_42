@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main_bonus.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: umut <umut@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: usogukpi <usogukpi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/23 13:49:21 by usogukpi          #+#    #+#             */
-/*   Updated: 2025/01/28 00:23:50 by umut             ###   ########.fr       */
+/*   Updated: 2025/01/28 14:57:52 by usogukpi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,17 +58,17 @@ static void	here_doc_path(int arg_num, char **args, char **envp)
 	pipex = init_here_doc_pipex(arg_num - 4, args, envp);
 	if (pipe(((pipex->opt_list)[0])->fd) < 0
 		|| pipe(((pipex->opt_list)[1])->fd) < 0)
-		shut_program_error(pipex, NULL);
+		shut_program_error(pipex, PIPE_ERR);
 	pid = fork();
 	if (pid < 0)
-		shut_program_error(pipex, NULL);
+		shut_program_error(pipex, PID_ERR);
 	else if (pid == 0)
 		here_doc_one(pipex, args);
 	else
 	{
 		pid2 = fork();
 		if (pid2 < 0)
-			shut_program_error(pipex, NULL);
+			shut_program_error(pipex, PID_ERR);
 		else if (pid2 == 0)
 			here_doc_two(pipex, envp);
 		else

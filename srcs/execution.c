@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execution.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: umut <umut@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: usogukpi <usogukpi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/21 15:52:27 by usogukpi          #+#    #+#             */
-/*   Updated: 2025/01/26 23:42:27 by umut             ###   ########.fr       */
+/*   Updated: 2025/01/28 16:20:36 by usogukpi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,13 +23,13 @@ void	execute(t_pipex *pipex, t_operation *opt, char **envp)
 
 	path = find_path(pipex, opt);
 	if (!path)
-		shut_program_error(pipex, CMD_NOT_FOUND);
+		shut_program_default(pipex, NULL);
 	argv = opt->cmd_args;
 	if (execve(path, argv, envp) == -1)
 	{
 		close(1);
 		close(0);
-		shut_program_error(pipex, CMD_NOT_FOUND);
+		shut_program_error(pipex, EXECVE_ERR);
 	}
 }
 

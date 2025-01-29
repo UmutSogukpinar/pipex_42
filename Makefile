@@ -2,8 +2,8 @@ NAME = pipex
 BONUS_NAME = pipex_bonus
 
 CC = gcc
-CFLAGS = -Wall -Wextra -Werror -Iincludes -Ilibs/libft -Ilibs/my_printf
-B_CFLAGS = -Wall -Wextra -Werror -Iincludes -Ilibs/libft -Ilibs/my_printf -Ibonus/get_next_line
+CFLAGS = -Wall -Wextra -Werror -Iincludes -Ilibs/libft 
+B_CFLAGS = -Wall -Wextra -Werror -Iincludes -Ilibs/libft -Ibonus/get_next_line
 
 RM = rm -rf
 
@@ -31,7 +31,6 @@ BONUS_SRCS =	$(BONUS_DIR)/main_bonus.c \
 
 
 LIBFT = $(LIB_DIR)/libft/libft.a
-PRINTF = $(LIB_DIR)/printf/libftprintf.a
 
 all: $(NAME)
 
@@ -39,17 +38,14 @@ bonus: $(BONUS_NAME)
 
 $(NAME): $(OBJS)
 	$(MAKE) -C $(LIB_DIR)/libft
-	$(MAKE) -C $(LIB_DIR)/printf
-	$(CC) $(CFLAGS) $(SRCS) $(LIBFT) $(PRINTF) -o $(NAME)
+	$(CC) $(CFLAGS) $(SRCS) $(LIBFT) -o $(NAME)
 
 $(BONUS_NAME): $(BONUS_OBJS)
 	$(MAKE) -C $(LIB_DIR)/libft
-	$(MAKE) -C $(LIB_DIR)/printf
-	$(CC) $(B_CFLAGS) $(BONUS_SRCS) $(LIBFT) $(PRINTF) -o $(NAME)
+	$(CC) $(B_CFLAGS) $(BONUS_SRCS) $(LIBFT) -o $(NAME)
 
 clean:
 	$(MAKE) -C $(LIB_DIR)/libft fclean
-	$(MAKE) -C $(LIB_DIR)/printf fclean
 
 fclean: clean
 	$(RM) $(NAME) $(BONUS_NAME)

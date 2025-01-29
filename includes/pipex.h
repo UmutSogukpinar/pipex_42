@@ -6,7 +6,7 @@
 /*   By: usogukpi <usogukpi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/21 13:05:19 by usogukpi          #+#    #+#             */
-/*   Updated: 2025/01/27 14:22:41 by usogukpi         ###   ########.fr       */
+/*   Updated: 2025/01/28 14:48:15 by usogukpi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,12 @@ void			free_pipex(t_pipex *pipex);
 char			*find_path(t_pipex *pipex, t_operation *opt);
 void			execute(t_pipex *pipex, t_operation *opt, char **envp);
 
-# define CMD_NOT_FOUND "command not found"
+# define CMD_NOT_FOUND "Command not found"
+# define EXECVE_ERR "Execve stops working"
+# define DUP2_ERR "Dup2 function fails"
+# define INFILE_ERR "Infile could not be opened"
+# define OUTFILE_ERR "Outfile could not be opened"
+# define PIPE_ERR "Pipe stops working"
+# define PID_ERR "Fork stops working"
 
 #endif

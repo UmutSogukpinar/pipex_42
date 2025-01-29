@@ -6,7 +6,7 @@
 /*   By: usogukpi <usogukpi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/25 14:04:05 by usogukpi          #+#    #+#             */
-/*   Updated: 2025/01/27 19:51:08 by usogukpi         ###   ########.fr       */
+/*   Updated: 2025/01/28 16:08:17 by usogukpi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ void	init_pipes(t_pipex *pipex, size_t amount)
 				close(((pipex->opt_list)[i - 1])->fd[1]);
 				i--;
 			}
-			shut_program_error(pipex, NULL);
+			shut_program_error(pipex, PIPE_ERR);
 		}
 		i++;
 	}
@@ -64,7 +64,7 @@ void	finish_gnl(t_pipex *pipex)
 
 	inter_fd = open("dup.txt", O_CREAT | O_TRUNC);
 	if (inter_fd < 0)
-		shut_program_error(pipex, NULL);
+		shut_program_error(pipex, INTERFILE_ERR);
 	bait = get_next_line(inter_fd);
 	while (bait)
 	{

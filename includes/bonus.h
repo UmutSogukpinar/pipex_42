@@ -6,7 +6,7 @@
 /*   By: usogukpi <usogukpi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/25 14:04:34 by usogukpi          #+#    #+#             */
-/*   Updated: 2025/01/27 19:47:22 by usogukpi         ###   ########.fr       */
+/*   Updated: 2025/01/28 14:56:37 by usogukpi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,5 +27,7 @@ void	here_doc_one(t_pipex *pipex, char **args);
 void	here_doc_two(t_pipex *pipex, char **envp);
 void	here_doc_three(t_pipex *pipex, char **envp);
 void	finish_gnl(t_pipex *pipex);
+
+# define INTERFILE_ERR "Interfile could not be opened"
 
 #endif

@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: usogukpi <usogukpi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/01/23 19:10:24 by umut              #+#    #+#             */
-/*   Updated: 2025/01/25 14:52:13 by usogukpi         ###   ########.fr       */
+/*   Created: 2025/01/28 13:50:15 by usogukpi          #+#    #+#             */
+/*   Updated: 2025/01/28 14:59:09 by usogukpi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ void	process(t_pipex *pipex, char **envp, t_data *data)
 	if (pid < 0)
 	{
 		free_data(data);
-		shut_program_error(pipex, NULL);
+		shut_program_error(pipex, PID_ERR);
 	}
 	else if (pid == 0)
 		child_rec(pipex, envp, last_child_index, data);
@@ -49,7 +49,7 @@ static void	child_rec(t_pipex *pipex, char **envp, size_t index, t_data *data)
 		if (pid < 0)
 		{
 			free_data(data);
-			shut_program_error(pipex, NULL);
+			shut_program_error(pipex, PID_ERR);
 		}
 		else if (pid == 0)
 			child_rec(pipex, envp, index - 1, data);
@@ -64,9 +64,9 @@ static void	parent(t_pipex *pipex, char **envp, size_t index)
 
 	outfile_fd = open_file(pipex, pipex->outfile, 0);
 	if (dup2((((pipex->opt_list)[index])->fd)[0], STDIN_FILENO) < 0)
-		shut_program_error(pipex, NULL);
+		shut_program_error(pipex, DUP2_ERR);
 	if (dup2(outfile_fd, STDOUT_FILENO) < 0)
-		shut_program_error(pipex, NULL);
+		shut_program_error(pipex, DUP2_ERR);
 	close_unused_pipes_one(pipex, index + 1);
 	execute(pipex, (pipex->opt_list)[index + 1], envp);
 }
@@ -77,9 +77,9 @@ static void	first_child(t_pipex *pipex, char **envp, t_data *data)
 
 	infile_fd = open_file(pipex, pipex->infile, 1);
 	if (dup2(infile_fd, STDIN_FILENO) < 0)
-		shut_program_error(pipex, NULL);
+		shut_program_error(pipex, DUP2_ERR);
 	if (dup2((((pipex->opt_list)[0])->fd)[1], STDOUT_FILENO) < 0)
-		shut_program_error(pipex, NULL);
+		shut_program_error(pipex, DUP2_ERR);
 	close_unused_pipes_one(pipex, data->pipe_amount);
 	execute(pipex, (pipex->opt_list)[0], envp);
 }
@@ -89,12 +89,12 @@ static void	execution(t_pipex *pipex, t_data *data, char **envp, size_t index)
 	if (dup2(((pipex->opt_list)[index - 1])->fd[0], STDIN_FILENO) < 0)
 	{
 		free_data(data);
-		shut_program_error(pipex, NULL);
+		shut_program_error(pipex, DUP2_ERR);
 	}
 	if (dup2(((pipex->opt_list)[index])->fd[1], STDOUT_FILENO) < 0)
 	{
 		free_data(data);
-		shut_program_error(pipex, NULL);
+		shut_program_error(pipex, DUP2_ERR);
 	}
 	close_unused_pipes_one(pipex, data->pipe_amount);
 	execute(pipex, (pipex->opt_list)[index], envp);

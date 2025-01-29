@@ -6,7 +6,7 @@
 /*   By: usogukpi <usogukpi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/21 13:06:00 by usogukpi          #+#    #+#             */
-/*   Updated: 2025/01/27 14:23:06 by usogukpi         ###   ########.fr       */
+/*   Updated: 2025/01/28 14:50:51 by usogukpi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ t_pipex	*init_pipex(size_t size, char **args, char **envp)
 
 	pipex = malloc(sizeof(t_pipex));
 	if (!pipex)
-		exit(EXIT_FAILURE);
+		shut_program_error(pipex, NULL);
 	pipex->list_size = size;
 	pipex->opt_list = malloc(sizeof(t_operation *) * (size + 1));
 	if (!(pipex->opt_list))

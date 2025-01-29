@@ -1,6 +1,6 @@
 NAME = libft.a
 CFLAGS = -Wall -Wextra -Werror
-CC = cc
+CC = gcc
 FILES =	ft_atoi.c \
 		ft_memchr.c \
 		ft_split.c \
