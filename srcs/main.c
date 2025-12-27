@@ -1,37 +1,51 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: usogukpi <usogukpi@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/01/23 13:31:51 by usogukpi          #+#    #+#             */
-/*   Updated: 2025/01/28 16:21:12 by usogukpi         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
+#include "feedback.h"
+#include "libft.h"
 #include "pipex.h"
-#include "process.h"
-#include "sys/types.h"
 #include "unistd.h"
 
-int	main(int arg_num, char **args, char **envp)
+static t_bool	is_args_valid(int argc, char **argv);
+static t_bool	error_msg(char *msg);
+
+int	main(int argc, char **argv, char **envp)
 {
 	t_pipex	*pipex;
-	pid_t	pid;
 
-	if (arg_num != 5)
-		exit(EXIT_FAILURE);
-	pipex = init_pipex(arg_num - 3, args, envp);
-	pipex->data = NULL;
-	if (pipe(((pipex->opt_list)[0])->fd) < 0)
-		shut_program_error(pipex, PIPE_ERR);
-	pid = fork();
-	if (pid < 0)
-		shut_program_error(pipex, PID_ERR);
-	else if (pid == 0)
-		child(pipex, envp);
-	parent(pipex, envp);
-	shut_program_default(pipex, NULL);
-	return (0);
+	if (!is_args_valid(argc - 1, argv + 1))
+		return (EXIT_FAILURE);
+	pipex = init_pipex(argc - 1, argv + 1, envp);
+	if (!pipex)
+		return (EXIT_FAILURE);
+	display_pipex(pipex);
+	free_pipex(pipex);
+	return (EXIT_SUCCESS);
+}
+
+static t_bool	is_args_valid(int argc, char **argv)
+{
+	if (!IS_BONUS)
+	{
+		if (argc != 4)
+			return (error_msg(INV_ARGC));
+	}
+	else
+	{
+		if (ft_strcmp(argv[0], HEREDOC) == 0)
+		{
+			if (argc < 5)
+				return (error_msg(INV_ARGC));
+		}
+		else
+		{
+			if (argc < 4)
+				return (error_msg(INV_ARGC));
+		}
+	}
+	return (TRUE);
+}
+
+static t_bool	error_msg(char *msg)
+{
+	ft_putstr_fd("[ERROR]: ", STDERR_FILENO);
+	ft_putendl_fd(msg, STDERR_FILENO);
+	return (FALSE);
 }

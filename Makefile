@@ -1,55 +1,42 @@
-NAME = pipex
-BONUS_NAME = pipex_bonus
+NAME    = pipex
 
-CC = gcc
-CFLAGS = -Wall -Wextra -Werror -Iincludes -Ilibs/libft 
-B_CFLAGS = -Wall -Wextra -Werror -Iincludes -Ilibs/libft -Ibonus/get_next_line
+CC      = cc
+RM      = rm -rf
 
-RM = rm -rf
+LIB_DIR = libs
+SRC_DIR = srcs
 
-SOURCE_DIR = ./srcs
-BONUS_DIR = ./bonus
-GNL_DIR = ./bonus/get_next_line
-LIB_DIR = ./libs
+LIBFT   = $(LIB_DIR)/libft/libft.a
 
-COMMON_SRCS =	$(SOURCE_DIR)/init.c \
-                $(SOURCE_DIR)/shut.c \
-                $(SOURCE_DIR)/execution.c
+IS_BONUS ?= 0
 
-SRCS =	$(SOURCE_DIR)/main.c \
-		$(SOURCE_DIR)/process.c \
-		$(COMMON_SRCS)
+CFLAGS  = -Wall -Wextra -Werror \
+		  -Iincludes \
+		  -I$(LIB_DIR)/libft \
+		  -DIS_BONUS=$(IS_BONUS)
 
-BONUS_SRCS =	$(BONUS_DIR)/main_bonus.c \
-				$(BONUS_DIR)/process_bonus.c \
-				$(BONUS_DIR)/utils_bonus.c \
-				$(BONUS_DIR)/init_bonus.c \
-				$(BONUS_DIR)/here_doc.c \
-				$(GNL_DIR)/get_next_line.c \
-				$(GNL_DIR)/get_next_line_utils.c \
-				$(COMMON_SRCS)
-
-
-LIBFT = $(LIB_DIR)/libft/libft.a
+SRCS = \
+	$(SRC_DIR)/main.c \
+	$(SRC_DIR)/init.c \
+	$(SRC_DIR)/utils.c
 
 all: $(NAME)
 
-bonus: $(BONUS_NAME)
+bonus:
+	$(MAKE) IS_BONUS=1 all
 
-$(NAME): $(OBJS)
-	$(MAKE) -C $(LIB_DIR)/libft
+$(NAME): $(LIBFT)
 	$(CC) $(CFLAGS) $(SRCS) $(LIBFT) -o $(NAME)
 
-$(BONUS_NAME): $(BONUS_OBJS)
+$(LIBFT):
 	$(MAKE) -C $(LIB_DIR)/libft
-	$(CC) $(B_CFLAGS) $(BONUS_SRCS) $(LIBFT) -o $(NAME)
 
 clean:
-	$(MAKE) -C $(LIB_DIR)/libft fclean
+	$(MAKE) -C $(LIB_DIR)/libft clean
 
 fclean: clean
-	$(RM) $(NAME) $(BONUS_NAME)
-	$(RM) outfile.txt
+	$(MAKE) -C $(LIB_DIR)/libft fclean
+	$(RM) $(NAME) outfile.txt
 
 re: fclean all
 
