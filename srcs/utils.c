@@ -1,5 +1,7 @@
+#include <unistd.h>
+#include <stdio.h>
 #include "pipex.h"
-#include "stdlib.h"
+#include "libft.h"
 
 int	ft_strcmp(const char *s1, const char *s2)
 {
@@ -11,77 +13,64 @@ int	ft_strcmp(const char *s1, const char *s2)
 	return ((unsigned char)*s1 - (unsigned char)*s2);
 }
 
-void	free_strv(char **v)
+t_bool	error_msg(char *msg, t_bool is_perror)
 {
-	size_t	i;
-
-	if (!v)
-		return ;
-	i = 0;
-	while (v[i])
+	if (is_perror)
 	{
-		free(v[i]);
-		i++;
+		perror(msg);
 	}
-	free(v);
-}
-
-void	free_strvv(char ***vv)
-{
-	size_t	i;
-
-	if (!vv)
-		return ;
-	i = 0;
-	while (vv[i])
+	else
 	{
-		free_strv(vv[i]);
-		i++;
+		ft_putstr_fd("[ERROR]: ", STDERR_FILENO);
+		ft_putendl_fd(msg, STDERR_FILENO);
 	}
-	free(vv);
-}
-
-void	free_pipex(t_pipex *pipex)
-{
-	if (!pipex)
-		return ;
-	free_strvv(pipex->cmds);
-	free(pipex);
+	return (FALSE);
 }
 
 // ! for debug (to be removed)
 
 #include "stdio.h"
 
-void	display_pipex(const t_pipex *px)
+static void	display_str_array(const char *name, char **arr)
 {
 	int	i;
-	int	j;
 
-	if (!px)
+	printf("%s:\n", name);
+	if (!arr)
 	{
-		printf("[PIPEX] NULL struct\n");
-		return ;
+		printf("  (null)\n");
+		return;
 	}
-	printf("========== PIPEX STATE ==========\n");
-	printf("cmd_count : %d\n", px->cmd_count);
-	printf("here_doc  : %s\n", px->here_doc ? "TRUE" : "FALSE");
-	printf("infile   : %s\n", px->infile ? px->infile : "(null)");
-	printf("outfile  : %s\n", px->outfile ? px->outfile : "(null)");
-	printf("limiter  : %s\n", px->limiter ? px->limiter : "(null)");
-	printf("\ncommands:\n");
 	i = 0;
-	while (px->cmds && px->cmds[i])
+	while (arr[i])
 	{
-		printf("  cmd[%d]: ", i);
-		j = 0;
-		while (px->cmds[i][j])
-		{
-			printf("[%s] ", px->cmds[i][j]);
-			j++;
-		}
-		printf("\n");
+		printf("  [%d] %s\n", i, arr[i]);
 		i++;
 	}
-	printf("=================================\n");
+}
+
+void	display_pipex(const t_pipex *p)
+{
+	if (!p)
+	{
+		printf("pipex: (null)\n");
+		return;
+	}
+
+	printf("===== PIPEX STATE =====\n");
+	printf("cmd_count : %d\n", p->cmd_count);
+	printf("here_doc  : %s\n", p->here_doc == TRUE ? "TRUE" : "FALSE");
+
+	printf("fds:\n");
+	printf("  in_fd  : %d\n", p->fds.in_fd);
+	printf("  out_fd : %d\n", p->fds.out_fd);
+
+	printf("infile  : %s\n", p->infile ? p->infile : "(null)");
+	printf("outfile : %s\n", p->outfile ? p->outfile : "(null)");
+	printf("limiter : %s\n", p->limiter ? p->limiter : "(null)");
+
+	display_str_array("cmds", p->cmds);
+	display_str_array("paths", p->paths);
+
+	printf("=======================\n");
 }

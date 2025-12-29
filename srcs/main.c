@@ -4,7 +4,6 @@
 #include "unistd.h"
 
 static t_bool	is_args_valid(int argc, char **argv);
-static t_bool	error_msg(char *msg);
 
 int	main(int argc, char **argv, char **envp)
 {
@@ -25,27 +24,20 @@ static t_bool	is_args_valid(int argc, char **argv)
 	if (!IS_BONUS)
 	{
 		if (argc != 4)
-			return (error_msg(INV_ARGC));
+			return (error_msg(ERR_INV_ARGC, FALSE));
 	}
 	else
 	{
 		if (ft_strcmp(argv[0], HEREDOC) == 0)
 		{
 			if (argc < 5)
-				return (error_msg(INV_ARGC));
+				return (error_msg(ERR_INV_ARGC, FALSE));
 		}
 		else
 		{
 			if (argc < 4)
-				return (error_msg(INV_ARGC));
+				return (error_msg(ERR_INV_ARGC, FALSE));
 		}
 	}
 	return (TRUE);
-}
-
-static t_bool	error_msg(char *msg)
-{
-	ft_putstr_fd("[ERROR]: ", STDERR_FILENO);
-	ft_putendl_fd(msg, STDERR_FILENO);
-	return (FALSE);
 }

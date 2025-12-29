@@ -18,11 +18,12 @@ CFLAGS  = -Wall -Wextra -Werror \
 SRCS = \
 	$(SRC_DIR)/main.c \
 	$(SRC_DIR)/init.c \
+	$(SRC_DIR)/free.c \
 	$(SRC_DIR)/utils.c
 
 all: $(NAME)
 
-bonus:
+bonus: fclean
 	$(MAKE) IS_BONUS=1 all
 
 $(NAME): $(LIBFT)
