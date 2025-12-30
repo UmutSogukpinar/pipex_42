@@ -111,13 +111,14 @@ static t_bool parse_path(t_pipex *pipex)
 	return (TRUE);
 }
 
-// TODO: Extre code for heredoc? maybe?
 static t_bool	parse_fds(t_pipex *pipex)
 {
 	if (pipex->here_doc)
 	{
 		pipex->fds.out_fd = open(pipex->outfile, O_CREAT | O_APPEND | O_WRONLY);
 		if (pipex->fds.out_fd < 0)
+			return (error_msg(ERROR, TRUE));
+		if (pipe(pipex->heredoc_fd) == -1)
 			return (error_msg(ERROR, TRUE));
 	}
 	else
