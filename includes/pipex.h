@@ -1,62 +1,64 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   pipex.h                                            :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: usogukpi <usogukpi@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/01/21 13:05:19 by usogukpi          #+#    #+#             */
-/*   Updated: 2025/01/28 14:48:15 by usogukpi         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #ifndef PIPEX_H
 # define PIPEX_H
 
-# include "stdlib.h"
+# ifndef IS_BONUS
+#  define IS_BONUS 0
+# endif
 
-typedef struct s_operation
+# define HEREDOC "here_doc"
+# define PATH "PATH="
+
+# define CLOSED_FD -1
+
+# define READ_END 0
+# define WRITE_END 1
+
+# define EXIT_CMD_NOT_FOUND 127
+
+typedef enum e_bool
 {
-	int			fd[2];
-	char		**cmd_args;
-	char		**paths;
+	FALSE = 0,
+	TRUE = 1
+}			t_bool;
 
-}				t_operation;
-
-typedef struct s_data
+typedef struct s_fds
 {
-	int			pipe_amount;
-	int			lst_child_index;
-	int			opt_amount;
-	int			arg_num;
+	int in_fd;
+	int out_fd;
+}				t_fds;
 
-}				t_data;
 
 typedef struct s_pipex
 {
-	t_operation	**opt_list;
-	t_data		*data;
-	size_t		list_size;
-	char		*infile;
-	char		*outfile;
+	int		exit_no;
+	int		cmd_count;
+	t_bool	here_doc;
+	int		heredoc_fd[2];
+	t_fds	fds;
+	char	**cmds;
+	char	**envp;
+	char	**paths;
+	char	*infile;
+	char	*outfile;
+	char	*limiter;
+}			t_pipex;
 
-}				t_pipex;
 
-t_pipex			*init_pipex(size_t size, char **args, char **envp);
-t_operation		*init_opt(t_pipex *pipex, char *args, char **envp);
-void			shut_program_error(t_pipex *pipex, char *message);
-void			shut_program_default(t_pipex *pipex, char *message);
-void			free_pipex(t_pipex *pipex);
+t_pipex		*init_pipex(int argc, char **argv, char **envp);
+void		execute(t_pipex *pipex);
+void child_process(t_pipex *pipex, int i, int prev_fd, int pipefd[2]);
+void		execute_child(t_pipex *pipex, int i);
 
-char			*find_path(t_pipex *pipex, t_operation *opt);
-void			execute(t_pipex *pipex, t_operation *opt, char **envp);
+void    init_infile(t_pipex *pipex);
+void    init_outfile(t_pipex *pipex);
 
-# define CMD_NOT_FOUND "Command not found"
-# define EXECVE_ERR "Execve stops working"
-# define DUP2_ERR "Dup2 function fails"
-# define INFILE_ERR "Infile could not be opened"
-# define OUTFILE_ERR "Outfile could not be opened"
-# define PIPE_ERR "Pipe stops working"
-# define PID_ERR "Fork stops working"
+void		close_fd(int *fd);
+int			ft_strcmp(const char *s1, const char *s2);
+void		free_strv(char **v);
+void		free_pipex(t_pipex *pipex);
+t_bool		error_msg(char *msg, t_bool is_perror);
+void		exit_error(t_pipex *pipex);
+
+
 
 #endif

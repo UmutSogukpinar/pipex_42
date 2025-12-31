@@ -1,18 +1,5 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   get_next_line.c                                    :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: usogukpi <usogukpi@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/11/02 15:49:21 by usogukpi          #+#    #+#             */
-/*   Updated: 2025/01/25 16:07:23 by usogukpi         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include "get_next_line.h"
 #include <unistd.h>
-#include "libft.h"
 
 int	ft_set_d(char **data)
 {
@@ -63,7 +50,7 @@ char	*ft_get_the_line(char *data)
 		}
 		len++;
 	}
-	return (ft_substr(data, 0, len));
+	return (ft_substr2(data, 0, len));
 }
 
 char	*get_next_line(int fd)
@@ -74,7 +61,7 @@ char	*get_next_line(int fd)
 	int			bytes_read;
 
 	if (fd < 0 || ft_set_d(&repo) || BUFFER_SIZE <= 0)
-		return (NULL);
+		return (ft_free_and_clean(&repo));
 	bytes_read = 0;
 	while (repo && !ft_is_newline_char(repo))
 	{

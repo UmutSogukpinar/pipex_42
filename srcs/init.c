@@ -1,103 +1,177 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   init.c                                             :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: usogukpi <usogukpi@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/01/21 13:06:00 by usogukpi          #+#    #+#             */
-/*   Updated: 2025/01/28 14:50:51 by usogukpi         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
+#include <unistd.h>
+#include <stdio.h>
 #include "libft.h"
 #include "pipex.h"
+#include "feedback.h"
 
-static void			init_cmd_args(t_pipex *pipex, t_operation *opt, char *args);
-static void			init_paths(t_pipex *pipex, t_operation *opt, char **envp);
-static char			*add_slash(t_pipex *pipex, char *old);
+static t_bool	parse_attr(t_pipex *pipex, char **argv, int argc);
+static char	**parse_cmds(t_pipex *pipex, char **argv);
+static t_bool parse_path(t_pipex *pipex);
+static t_bool init_heredoc(t_pipex *pipex);
 
-t_pipex	*init_pipex(size_t size, char **args, char **envp)
+/**
+ * Allocates and initializes the main pipex structure.
+ *
+ * - Stores envp reference
+ * 
+ * - Sets output file
+ * 
+ * - Parses PATH variable
+ * 
+ * - Parses program attributes (heredoc, infile, command count)
+ * 
+ * - Initializes heredoc pipe if needed
+ * 
+ * - Extracts command list
+ *
+ * On any failure, frees allocated resources and returns NULL.
+ *
+ * @param argc (int): Argument count
+ * @param argv (char **): Argument vector
+ * @param envp (char **): Environment variables
+ * 
+ * @return (t_pipex *): Initialized t_pipex pointer or NULL on error
+ */
+t_pipex	*init_pipex(int argc, char **argv, char **envp)
 {
 	t_pipex	*pipex;
-	size_t	i;
 
-	pipex = malloc(sizeof(t_pipex));
+	pipex = ft_calloc(1, sizeof(t_pipex));
 	if (!pipex)
-		shut_program_error(pipex, NULL);
-	pipex->list_size = size;
-	pipex->opt_list = malloc(sizeof(t_operation *) * (size + 1));
-	if (!(pipex->opt_list))
-		shut_program_error(pipex, NULL);
-	i = 0;
-	while (i < size)
 	{
-		(pipex->opt_list)[i] = init_opt(pipex, args[i + 2], envp);
-		i++;
+		perror(ERROR);
+		return (NULL);
 	}
-	(pipex->opt_list)[i] = NULL;
-	pipex->infile = ft_strdup(args[1]);
-	pipex->outfile = ft_strdup(args[size + 2]);
-	if (!(pipex->infile) || !(pipex->outfile))
-		shut_program_error(pipex, NULL);
+	pipex->envp = envp;
+	pipex->outfile = argv[argc - 1];
+	if (!parse_path(pipex) || !parse_attr(pipex, argv, argc) || !init_heredoc(pipex))
+	{
+		free_pipex(pipex);
+		return (NULL);
+	}
+	pipex->cmds = parse_cmds(pipex, argv);
+	if (!pipex->cmds)
+	{
+		free_pipex(pipex);
+		return (NULL);
+	}
 	return (pipex);
 }
 
-t_operation	*init_opt(t_pipex *pipex, char *args, char **envp)
+/**
+ * Parses execution attributes from command-line arguments.
+ *
+ * - In bonus + heredoc mode:
+ *   Sets heredoc flag, limiter, and command count.
+ *
+ * - Otherwise:
+ *   Sets infile and command count for normal execution.
+ *
+ * @param pipex (t_pipex): Pipex structure to fill
+ * @param argv (char **): Argument vector
+ * @param argc (int): Argument count
+ * 
+ * @return (t_bool): TRUE always (attributes are derived, not validated)
+ */
+static t_bool	parse_attr(t_pipex *pipex, char **argv, int argc)
 {
-	t_operation	*opt;
-
-	opt = malloc(sizeof(t_operation));
-	if (!opt)
-		shut_program_error(pipex, NULL);
-	init_cmd_args(pipex, opt, args);
-	init_paths(pipex, opt, envp);
-	return (opt);
-}
-
-static void	init_cmd_args(t_pipex *pipex, t_operation *opt, char *args)
-{
-	char	**temp;
-
-	temp = ft_split(args, ' ');
-	if (!temp)
-		shut_program_error(pipex, NULL);
-	opt->cmd_args = temp;
-}
-
-static void	init_paths(t_pipex *pipex, t_operation *opt, char **envp)
-{
-	int	i;
-	int	j;
-
-	i = -1;
-	while (envp[++i])
+	if (IS_BONUS && ft_strcmp(HEREDOC, argv[0]) == 0)
 	{
-		if (ft_strncmp("PATH=", envp[i], 5) == 0)
-		{
-			opt->paths = ft_split(envp[i] + 5, ':');
-			if (!(opt->paths))
-				shut_program_error(pipex, NULL);
-			j = -1;
-			while ((opt->paths)[++j])
-				(opt->paths)[j] = add_slash(pipex, (opt->paths)[j]);
-			return ;
-		}
+		pipex->here_doc = TRUE;
+		pipex->cmd_count = argc - 3;
+		pipex->limiter = argv[1];
 	}
-	shut_program_error(pipex, NULL);
+	else
+	{
+		pipex->here_doc = FALSE;
+		pipex->cmd_count = argc - 2;
+		pipex->infile = argv[0];
+	}
+	return (TRUE);
 }
 
-static char	*add_slash(t_pipex *pipex, char *old)
+/**
+ * Extracts command strings from argument list and stores them
+ * in a NULL-terminated array.
+ *
+ * Adjusts argv offset depending on heredoc usage.
+ *
+ * @param pipex (t_pipex *): Initialized pipex structure
+ * @param argv (char **): Argument vector
+ * 
+ * @return (char **): Array of command strings or NULL on allocation failure
+ */
+static char	**parse_cmds(t_pipex *pipex, char **argv)
 {
-	size_t	total_size;
-	char	*new;
+	char	**cmds;
+	int		i;
 
-	total_size = ft_strlen(old) + 1 + 1;
-	new = malloc(total_size);
-	if (!new)
-		shut_program_error(pipex, NULL);
-	ft_strlcpy(new, old, total_size);
-	ft_strlcat(new, "/", total_size);
-	free(old);
-	return (new);
+	if (IS_BONUS && ft_strcmp(HEREDOC, argv[0]) == 0)
+		argv += 2;
+	else
+		argv += 1;
+	cmds = ft_calloc(pipex->cmd_count + 1, sizeof(char *));
+	if (!cmds)
+	{
+		perror(ERROR);
+		return (NULL);
+	}
+	i = -1;
+	while (++i < pipex->cmd_count)
+		cmds[i] = argv[i];
+	return (cmds);
+}
+
+/**
+ * Searches for PATH variable in environment and splits it into
+ * individual directories.
+ *
+ * If PATH is not found, execution continues without path resolution.
+ *
+ * @param pipex (t_pipex *): Initialized pipex structure
+ * 
+ * @return (t_bool): TRUE on success, FALSE on split failure
+ */
+
+static t_bool parse_path(t_pipex *pipex)
+{
+	int i;
+	int len;
+	char *var;
+
+	i = 0;
+	len = ft_strlen(PATH);
+	var = pipex->envp[0];
+	while (var)
+	{
+		if (ft_strncmp(var, PATH, len) == 0)
+		{
+			var += len + 1;
+			pipex->paths = ft_split(var, ':');
+			if (!pipex->paths)
+				return (error_msg(ERROR, TRUE));
+			else
+				return (TRUE);
+		}
+		var = pipex->envp[++i];
+	}
+	return (TRUE);
+}
+
+/**
+ * Initializes heredoc pipe if heredoc mode is enabled.
+ *
+ * @param (t_pipex *): pipex Pipex structure
+ * 
+ * @return (t_bool): TRUE on success, FALSE if pipe creation fails
+ */
+
+static t_bool init_heredoc(t_pipex *pipex)
+{
+	if (pipex->here_doc)
+	{
+		if (pipe(pipex->heredoc_fd) == -1)
+			return (error_msg(ERROR, TRUE));
+	}
+	return (TRUE);
 }
