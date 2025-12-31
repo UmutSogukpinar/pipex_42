@@ -46,6 +46,7 @@ typedef struct s_pipex
 
 t_pipex		*init_pipex(int argc, char **argv, char **envp);
 void		execute(t_pipex *pipex);
+void child_process(t_pipex *pipex, int i, int prev_fd, int pipefd[2]);
 void		execute_child(t_pipex *pipex, int i);
 
 void    init_infile(t_pipex *pipex);

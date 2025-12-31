@@ -5,7 +5,6 @@
 #include "get_next_line.h"
 
 static void prepare_heredoc(t_pipex *pipex);
-static void child_process(t_pipex *pipex, int i, int prev_fd, int pipefd[2]);
 static void parent_process(int i, int count, int *prev_fd, int pipefd[2]);
 static void wait_all(t_pipex *pipex, int count, pid_t last_pid);
 
@@ -44,55 +43,6 @@ void execute(t_pipex *pipex)
         i++;
     }
     wait_all(pipex, pipex->cmd_count, pid);
-}
-
-/**
- * Sets up input/output redirections and executes a command
- * in the child process.
- *
- * - Redirects STDIN from infile, heredoc, or previous pipe
- * - Redirects STDOUT to outfile or next pipe
- * - Closes unused file descriptors
- * - Executes the command
- *
- * This function does not return on success.
- *
- * @param pipex (t_pipex *): Pipex structure
- * @param i (int): Command index
- * @param prev_fd (int): Read end of previous pipe
- * @param pipefd (int[2]): Current pipe file descriptors
- */
-static void child_process(t_pipex *pipex, int i, int prev_fd, int pipefd[2])
-{
-    if (i == 0)
-    {
-		init_infile(pipex);
-        if (pipex->here_doc)
-            dup2(pipex->heredoc_fd[READ_END], STDIN_FILENO);
-        else
-            dup2(pipex->fds.in_fd, STDIN_FILENO);
-    }
-    else
-    {
-        dup2(prev_fd, STDIN_FILENO);
-        close_fd(&prev_fd);
-    }
-    if (i == pipex->cmd_count - 1)
-	{
-		init_outfile(pipex);
-        dup2(pipex->fds.out_fd, STDOUT_FILENO);
-	}
-    else
-        dup2(pipefd[WRITE_END], STDOUT_FILENO);
-    if (i < pipex->cmd_count - 1)
-    {
-        close_fd(&(pipefd[READ_END]));
-        close_fd(&(pipefd[WRITE_END]));
-    }
-    close_fd(&(pipex->fds.out_fd));
-    if (pipex->here_doc)
-        close_fd(&(pipex->heredoc_fd[READ_END]));
-    execute_child(pipex, i);
 }
 
 /**

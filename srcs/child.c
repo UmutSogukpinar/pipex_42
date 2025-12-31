@@ -1,148 +1,90 @@
 #include <unistd.h>
-#include <stdio.h>
-#include "libft.h"
 #include "pipex.h"
-#include "feedback.h"
 
-static char *get_full_cmd(t_pipex *pipex, char *old_cmd);
-static char **split_and_validate_cmd(t_pipex *pipex, int i);
-static void resolve_command_path(t_pipex *pipex, char **cmd);
-static void exec_command(t_pipex *pipex, char **cmd);
+static void finalize_child(t_pipex *pipex, int i, int pipefd[2]);
+static void setup_child_io(t_pipex *pipex, int i, int prev_fd, int pipefd[2]);
 
 /**
- * Resolves and executes a single command in the child process.
+ * Prepares the child process for command execution.
  *
- * - Splits and validates command arguments
- * - Resolves executable path
- * - Executes command using execve
+ * - Sets up STDIN and STDOUT redirections
+ * - Closes unused file descriptors
+ * - Executes the resolved command
+ *
+ * This function does not return on success.
  *
  * @param pipex (t_pipex *): Pipex structure
  * @param i (int): Index of the command to execute
+ * @param prev_fd (int): Read end of the previous pipe
+ * @param pipefd (int[2]): Current pipe file descriptors
  */
-void execute_child(t_pipex *pipex, int i)
+void child_process(t_pipex *pipex, int i, int prev_fd, int pipefd[2])
 {
-    char **cmd;
-
-    cmd = split_and_validate_cmd(pipex, i);
-    resolve_command_path(pipex, cmd);
-    exec_command(pipex, cmd);
+    setup_child_io(pipex, i, prev_fd, pipefd);
+    finalize_child(pipex, i, pipefd);
+    execute_child(pipex, i);
 }
 
 /**
- * Resolves the full executable path of a command.
+ * Configures input and output redirections for a child process.
  *
- * - If the command contains '/', it is treated as a direct path
- * - Otherwise, searches through PATH directories
+ * - STDIN:
+ *   - infile or heredoc for the first command
+ *   - previous pipe for subsequent commands
  *
- * On success, returns a newly allocated full path.
- * On failure, frees old_cmd and returns NULL.
- *
- * @param pipex (t_pipex): Pipex structure
- * @param old_cmd (char *): Command name
- * 
- * @return (char *): Full command path or NULL if not found
- */
-static char *get_full_cmd(t_pipex *pipex, char *old_cmd)
-{
-    char    *tmp;
-    char    *full;
-    int     i;
-
-    if (ft_strchr(old_cmd, '/'))
-        return (old_cmd);
-    i = -1;
-    while (pipex->paths && pipex->paths[++i])
-    {
-        tmp = ft_strjoin(pipex->paths[i], "/");
-        if (!tmp)
-            exit(EXIT_FAILURE);
-        full = ft_strjoin(tmp, old_cmd);
-        free(tmp);
-        if (!full)
-            exit(EXIT_FAILURE);
-        if (access(full, X_OK) == 0)
-            return (free(old_cmd), full);
-        free(full);
-    }
-    free(old_cmd);
-    return (NULL);
-}
-
-/**
- * Splits a command string into arguments and validates it.
- *
- * If the command is empty, prints an error message and exits
- * with command-not-found status.
+ * - STDOUT:
+ *   - outfile for the last command
+ *   - write end of the current pipe otherwise
  *
  * @param pipex (t_pipex *): Pipex structure
  * @param i (int): Command index
- * 
- * @return (char **): NULL-terminated argument vector
+ * @param prev_fd (int): Read end of the previous pipe
+ * @param pipefd (int[2]): Current pipe file descriptors
  */
-static char **split_and_validate_cmd(t_pipex *pipex, int i)
+static void setup_child_io(t_pipex *pipex, int i, int prev_fd, int pipefd[2])
 {
-    char **cmd;
-
-    cmd = ft_split(pipex->cmds[i], ' ');
-    if (!cmd)
-        exit_error(pipex);
-    if (!cmd[0])
+    if (i == 0)
     {
-        ft_putstr_fd(pipex->cmds[i], STDERR_FILENO);
-        ft_putendl_fd(": command not found", STDERR_FILENO);
-        free_strv(cmd);
-        free_pipex(pipex);
-        exit(EXIT_CMD_NOT_FOUND);
+        init_infile(pipex);
+        if (pipex->here_doc)
+            dup2(pipex->heredoc_fd[READ_END], STDIN_FILENO);
+        else
+            dup2(pipex->fds.in_fd, STDIN_FILENO);
     }
-    return (cmd);
+    else
+    {
+        dup2(prev_fd, STDIN_FILENO);
+        close_fd(&prev_fd);
+    }
+    if (i == pipex->cmd_count - 1)
+    {
+        init_outfile(pipex);
+        dup2(pipex->fds.out_fd, STDOUT_FILENO);
+    }
+    else
+        dup2(pipefd[WRITE_END], STDOUT_FILENO);
 }
 
 /**
- * resolve_command_path
+ * finalize_child
  *
- * Resolves the executable path of the command.
+ * Closes all unused file descriptors in the child process
+ * before command execution.
  *
- * Replaces cmd[0] with the resolved full path.
- * If resolution fails, prints an error message and exits
- * with command-not-found status.
- *
- * @param pipex (t_pipex): Pipex structure
- * @param cmd (char **): Argument vector
- */
-static void resolve_command_path(t_pipex *pipex, char **cmd)
-{
-    char *cmd_name;
-
-    cmd_name = ft_strdup(cmd[0]);
-    if (!cmd_name)
-    {
-        free_strv(cmd);
-        exit_error(pipex);
-    }
-    cmd[0] = get_full_cmd(pipex, cmd[0]);
-    if (!cmd[0])
-    {
-        ft_putstr_fd(cmd_name, STDERR_FILENO);
-        ft_putendl_fd(": command not found", STDERR_FILENO);
-        free(cmd_name);
-        free_strv(cmd);
-        free_pipex(pipex);
-        exit(EXIT_CMD_NOT_FOUND);
-    }
-    free(cmd_name);
-}
-
-/**
- * Executes a command using execve.
- *
- * On failure, prints a system error and exits the program.
+ * Prevents file descriptor leaks and unintended inheritance.
  *
  * @param pipex (t_pipex *): Pipex structure
- * @param cmd (char **): Argument vector
+ * @param i (int): Command index
+ * @param pipefd (int[2]): Current pipe file descriptors
  */
-static void exec_command(t_pipex *pipex, char **cmd)
+static void finalize_child(t_pipex *pipex, int i, int pipefd[2])
 {
-    execve(cmd[0], cmd, pipex->envp);
-    perror(ERROR);
-    exit_error(pipex);
+    if (i < pipex->cmd_count - 1)
+    {
+        close_fd(&(pipefd[READ_END]));
+        close_fd(&(pipefd[WRITE_END]));
+    }
+    close_fd(&(pipex->fds.out_fd));
+    if (pipex->here_doc)
+        close_fd(&(pipex->heredoc_fd[READ_END]));
 }

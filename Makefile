@@ -21,8 +21,9 @@ SRCS = \
 	$(SRC_DIR)/main.c \
 	$(SRC_DIR)/init.c \
 	$(SRC_DIR)/free.c \
-	$(SRC_DIR)/child.c \
 	$(SRC_DIR)/execute.c \
+	$(SRC_DIR)/child.c \
+	$(SRC_DIR)/execute_child.c \
 	$(SRC_DIR)/fd.c \
 	$(SRC_DIR)/utils.c
 
