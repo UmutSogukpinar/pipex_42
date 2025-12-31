@@ -1,8 +1,15 @@
 #include <fcntl.h>
-#include <unistd.h>
-
 #include "pipex.h"
 
+/**
+ * Opens the input file for reading in normal (non-heredoc) mode.
+ *
+ * If heredoc mode is enabled, this function does nothing.
+ * On failure, closes already opened output file and exits
+ * the program with an error.
+ *
+ * @param pipex Pipex structure containing infile information
+ */
 void    init_infile(t_pipex *pipex)
 {
     if (!pipex->here_doc)
@@ -16,6 +23,19 @@ void    init_infile(t_pipex *pipex)
     }
 }
 
+/**
+ * Opens the output file according to execution mode.
+ *
+ * - Heredoc mode:
+ *   Opens the file in append mode.
+ *
+ * - Normal mode:
+ *   Creates or truncates the file before writing.
+ *
+ * On failure, exits the program with an error.
+ *
+ * @param pipex (t_pipex *): Pipex structure containing outfile information
+ */
 void    init_outfile(t_pipex *pipex)
 {
     if (pipex->here_doc)

@@ -1,10 +1,7 @@
-#include <sys/types.h>
 #include <sys/wait.h>
 #include <unistd.h>
-#include <stdlib.h>
-#include "pipex.h"
-#include "feedback.h"
 #include "libft.h"
+#include "pipex.h"
 #include "get_next_line.h"
 
 static void prepare_heredoc(t_pipex *pipex);
@@ -12,6 +9,17 @@ static void child_process(t_pipex *pipex, int i, int prev_fd, int pipefd[2]);
 static void parent_process(int i, int count, int *prev_fd, int pipefd[2]);
 static void wait_all(t_pipex *pipex, int count, pid_t last_pid);
 
+/**
+ * Executes all commands using pipes and forks.
+ *
+ * - Prepares heredoc input if enabled
+ * - Creates pipes between commands
+ * - Forks a process for each command
+ * - Manages parent/child responsibilities
+ * - Waits for all children and stores last command exit code
+ *
+ * @param pipex (t_pipex *): Initialized pipex structure
+ */
 void execute(t_pipex *pipex)
 {
     int     i;
@@ -38,6 +46,22 @@ void execute(t_pipex *pipex)
     wait_all(pipex, pipex->cmd_count, pid);
 }
 
+/**
+ * Sets up input/output redirections and executes a command
+ * in the child process.
+ *
+ * - Redirects STDIN from infile, heredoc, or previous pipe
+ * - Redirects STDOUT to outfile or next pipe
+ * - Closes unused file descriptors
+ * - Executes the command
+ *
+ * This function does not return on success.
+ *
+ * @param pipex (t_pipex *): Pipex structure
+ * @param i (int): Command index
+ * @param prev_fd (int): Read end of previous pipe
+ * @param pipefd (int[2]): Current pipe file descriptors
+ */
 static void child_process(t_pipex *pipex, int i, int prev_fd, int pipefd[2])
 {
     if (i == 0)
@@ -71,6 +95,17 @@ static void child_process(t_pipex *pipex, int i, int prev_fd, int pipefd[2])
     execute_child(pipex, i);
 }
 
+/**
+ * Handles file descriptor management in the parent process.
+ *
+ * - Closes previous pipe read end
+ * - Prepares next command input by storing current pipe read end
+ *
+ * @param i (int): Current command index
+ * @param count (int):  Total command count
+ * @param prev_fd (int *): Pointer to previous pipe read end
+ * @param pipefd (int[2]): Current pipe file descriptors
+ */
 static void parent_process(int i, int count, int *prev_fd, int pipefd[2])
 {
     if (*prev_fd != -1)
@@ -82,6 +117,19 @@ static void parent_process(int i, int count, int *prev_fd, int pipefd[2])
     }
 }
 
+/**
+ * Waits for all child processes to terminate.
+ *
+ * Captures the exit status of the last executed command,
+ * following shell behavior.
+ *
+ * - Normal exit: exit code
+ * - Signal exit: 128 + signal number
+ *
+ * @param pipex (t_pipex *): Pipex structure to store exit code
+ * @param count (int): Number of child processes
+ * @param last_pid (pid_t): PID of the last command
+ */
 static void wait_all(t_pipex *pipex, int count, pid_t last_pid)
 {
     int     status;
@@ -105,6 +153,14 @@ static void wait_all(t_pipex *pipex, int count, pid_t last_pid)
     }
 }
 
+/**
+ * Reads input from STDIN until the limiter is encountered
+ * and writes it to the heredoc pipe.
+ *
+ * The write end of the heredoc pipe is closed after completion.
+ *
+ * @param pipex (t_pipex *): Pipex structure containing heredoc data
+ */
 static void prepare_heredoc(t_pipex *pipex)
 {
     char *line;

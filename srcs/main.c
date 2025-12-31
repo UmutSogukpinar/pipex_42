@@ -1,10 +1,10 @@
-#include "feedback.h"
-#include "libft.h"
+#include <stdlib.h>
 #include "pipex.h"
-#include "unistd.h"
+#include "feedback.h"
 
 static t_bool	is_args_valid(int argc, char **argv);
 
+// Main Function
 int	main(int argc, char **argv, char **envp)
 {
 	t_pipex	*pipex;
@@ -21,6 +21,25 @@ int	main(int argc, char **argv, char **envp)
 	return (exit_no);
 }
 
+/**
+ * Validates command-line arguments count based on program mode.
+ *
+ * - In mandatory mode (IS_BONUS == FALSE):
+ *   Expects exactly 4 arguments.
+ *
+ * - In bonus mode (IS_BONUS == TRUE):
+ *   - If heredoc is used (argv[0] == HEREDOC):
+ *     Expects at least 5 arguments.
+ *   - Otherwise:
+ *     Expects at least 4 arguments.
+ *
+ * On invalid argument count, prints an error message and returns FALSE.
+ *
+ * @param argc (int): Argument count
+ * @param argv (char **): Argument vector
+ * 
+ * @return TRUE (t_bool): if arguments are valid, otherwise FALSE
+ */
 static t_bool	is_args_valid(int argc, char **argv)
 {
 	if (!IS_BONUS)
