@@ -24,8 +24,6 @@ static char *get_full_cmd(t_pipex *pipex, char *old_cmd)
     char    *full;
     int     i;
 
-    if (!old_cmd || !*old_cmd)
-        return (NULL);
     if (ft_strchr(old_cmd, '/'))
         return (old_cmd);
     i = -1;
@@ -42,6 +40,7 @@ static char *get_full_cmd(t_pipex *pipex, char *old_cmd)
             return (free(old_cmd), full);
         free(full);
     }
+    free(old_cmd);
     return (NULL);
 }
 
@@ -69,7 +68,10 @@ static void resolve_command_path(t_pipex *pipex, char **cmd)
 
     cmd_name = ft_strdup(cmd[0]);
     if (!cmd_name)
+    {
+        free_strv(cmd);
         exit_error(pipex);
+    }
     cmd[0] = get_full_cmd(pipex, cmd[0]);
     if (!cmd[0])
     {

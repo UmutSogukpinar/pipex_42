@@ -42,6 +42,7 @@ static void child_process(t_pipex *pipex, int i, int prev_fd, int pipefd[2])
 {
     if (i == 0)
     {
+		init_infile(pipex);
         if (pipex->here_doc)
             dup2(pipex->heredoc_fd[READ_END], STDIN_FILENO);
         else
@@ -50,30 +51,33 @@ static void child_process(t_pipex *pipex, int i, int prev_fd, int pipefd[2])
     else
     {
         dup2(prev_fd, STDIN_FILENO);
-        close(prev_fd);
+        close_fd(&prev_fd);
     }
     if (i == pipex->cmd_count - 1)
+	{
+		init_outfile(pipex);
         dup2(pipex->fds.out_fd, STDOUT_FILENO);
+	}
     else
         dup2(pipefd[WRITE_END], STDOUT_FILENO);
     if (i < pipex->cmd_count - 1)
     {
-        close(pipefd[READ_END]);
-        close(pipefd[WRITE_END]);
+        close_fd(&(pipefd[READ_END]));
+        close_fd(&(pipefd[WRITE_END]));
     }
-    close(pipex->fds.out_fd);
+    close_fd(&(pipex->fds.out_fd));
     if (pipex->here_doc)
-        close(pipex->heredoc_fd[READ_END]);
+        close_fd(&(pipex->heredoc_fd[READ_END]));
     execute_child(pipex, i);
 }
 
 static void parent_process(int i, int count, int *prev_fd, int pipefd[2])
 {
     if (*prev_fd != -1)
-        close(*prev_fd);
+        close_fd(prev_fd);
     if (i < count - 1)
     {
-        close(pipefd[WRITE_END]);
+        close_fd(&(pipefd[WRITE_END]));
         *prev_fd = pipefd[READ_END];
     }
 }
@@ -119,5 +123,5 @@ static void prepare_heredoc(t_pipex *pipex)
 		line = get_next_line(STDIN_FILENO);
     }
 	free_gnl();
-    close(pipex->heredoc_fd[WRITE_END]);
+    close_fd(&(pipex->heredoc_fd[WRITE_END]));
 }

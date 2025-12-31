@@ -23,6 +23,7 @@ SRCS = \
 	$(SRC_DIR)/free.c \
 	$(SRC_DIR)/child.c \
 	$(SRC_DIR)/execute.c \
+	$(SRC_DIR)/fd.c \
 	$(SRC_DIR)/utils.c
 
 all: $(NAME)

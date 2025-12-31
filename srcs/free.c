@@ -4,7 +4,6 @@
 #include "pipex.h"
 #include "feedback.h"
 
-// TODO: could turn into static !!!
 void	free_strv(char **v)
 {
 	size_t	i;
@@ -26,14 +25,10 @@ void	free_pipex(t_pipex *pipex)
 		return ;
 	free_strv(pipex->paths);
 	free(pipex->cmds);
-	if (pipex->fds.in_fd > 0)
-		close(pipex->fds.in_fd);
-	if (pipex->fds.out_fd > 0)
-		close(pipex->fds.out_fd);
-	if (pipex->heredoc_fd[0] > 0)
-		close(pipex->heredoc_fd[0]);
-	if (pipex->heredoc_fd[1] > 0)
-		close(pipex->heredoc_fd[1]);
+	close_fd(&(pipex->fds.in_fd));
+	close_fd(&(pipex->fds.out_fd));
+	close_fd(&(pipex->heredoc_fd[READ_END]));
+	close_fd(&(pipex->heredoc_fd[WRITE_END]));
 	free(pipex);
 }
 
