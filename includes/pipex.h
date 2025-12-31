@@ -45,7 +45,9 @@ typedef struct s_pipex
 
 
 t_pipex		*init_pipex(int argc, char **argv, char **envp);
-void execute_child(t_pipex *pipex, int i);
+void		execute(t_pipex *pipex);
+
+void		execute_child(t_pipex *pipex, int i);
 int			ft_strcmp(const char *s1, const char *s2);
 void		free_strv(char **v);
 void		free_pipex(t_pipex *pipex);

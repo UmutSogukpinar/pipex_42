@@ -4,28 +4,18 @@
 #include "feedback.h"
 #include "libft.h"
 
+static char *get_full_cmd(t_pipex *pipex, char *old_cmd);
+static char **split_and_validate_cmd(t_pipex *pipex, int i);
+static void resolve_command_path(t_pipex *pipex, char **cmd);
+static void exec_command(t_pipex *pipex, char **cmd);
+
 void execute_child(t_pipex *pipex, int i)
 {
-    char    **splitted_cmd;
-    char    *cmd_first_element;
+    char **cmd;
 
-    splitted_cmd = ft_split(pipex->cmds[i], ' ');
-    if (!splitted_cmd)
-        exit(EXIT_FAILURE);
-    cmd_first_element = ft_strdup(splitted_cmd[0]);
-    if (!cmd_first_element)
-        exit(EXIT_FAILURE);
-    splitted_cmd[0] = get_full_cmd(pipex, splitted_cmd[0]);
-    if (splitted_cmd[0] == NULL)
-    {
-        ft_putstr_fd(cmd_first_element, STDERR_FILENO);
-        ft_putendl_fd(": command not found", STDERR_FILENO);
-        exit(EXIT_CMD_NOT_FOUND);
-    }
-    free(cmd_first_element);
-    execve(splitted_cmd[0], splitted_cmd, pipex->envp);
-    perror(ERROR);
-    exit(EXIT_FAILURE);
+    cmd = split_and_validate_cmd(pipex, i);
+    resolve_command_path(pipex, cmd);
+    exec_command(pipex, cmd);
 }
 
 static char *get_full_cmd(t_pipex *pipex, char *old_cmd)
@@ -53,5 +43,50 @@ static char *get_full_cmd(t_pipex *pipex, char *old_cmd)
         free(full);
     }
     return (NULL);
+}
+
+static char **split_and_validate_cmd(t_pipex *pipex, int i)
+{
+    char **cmd;
+
+    cmd = ft_split(pipex->cmds[i], ' ');
+    if (!cmd)
+        exit_error(pipex);
+    if (!cmd[0])
+    {
+        ft_putstr_fd(pipex->cmds[i], STDERR_FILENO);
+        ft_putendl_fd(": command not found", STDERR_FILENO);
+        free_strv(cmd);
+        free_pipex(pipex);
+        exit(EXIT_CMD_NOT_FOUND);
+    }
+    return (cmd);
+}
+
+static void resolve_command_path(t_pipex *pipex, char **cmd)
+{
+    char *cmd_name;
+
+    cmd_name = ft_strdup(cmd[0]);
+    if (!cmd_name)
+        exit_error(pipex);
+    cmd[0] = get_full_cmd(pipex, cmd[0]);
+    if (!cmd[0])
+    {
+        ft_putstr_fd(cmd_name, STDERR_FILENO);
+        ft_putendl_fd(": command not found", STDERR_FILENO);
+        free(cmd_name);
+        free_strv(cmd);
+        free_pipex(pipex);
+        exit(EXIT_CMD_NOT_FOUND);
+    }
+    free(cmd_name);
+}
+
+static void exec_command(t_pipex *pipex, char **cmd)
+{
+    execve(cmd[0], cmd, pipex->envp);
+    perror(ERROR);
+    exit_error(pipex);
 }
 

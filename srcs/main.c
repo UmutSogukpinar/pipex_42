@@ -8,15 +8,17 @@ static t_bool	is_args_valid(int argc, char **argv);
 int	main(int argc, char **argv, char **envp)
 {
 	t_pipex	*pipex;
+	int		exit_no;
 
 	if (!is_args_valid(argc - 1, argv + 1))
 		return (EXIT_FAILURE);
 	pipex = init_pipex(argc - 1, argv + 1, envp);
 	if (!pipex)
 		return (EXIT_FAILURE);
-	display_pipex(pipex);
+	execute(pipex);
+	exit_no = pipex->exit_no;
 	free_pipex(pipex);
-	return (EXIT_SUCCESS);
+	return (exit_no);
 }
 
 static t_bool	is_args_valid(int argc, char **argv)

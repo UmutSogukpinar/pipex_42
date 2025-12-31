@@ -1,7 +1,8 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
 #include "pipex.h"
-#include "stdlib.h"
 #include "feedback.h"
-#include "unistd.h"
 
 // TODO: could turn into static !!!
 void	free_strv(char **v)
